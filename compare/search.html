@@ -1,0 +1,236 @@
+<html>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/4.5.2/darkly/bootstrap.min.css">
+<link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400&amp;display=swap">
+<style>
+    .name {
+        margin-left: 20px;
+    }
+
+    #autocomplete,
+    #autocomplete2 {
+        height: 50px;
+        width: 1000px;
+        border-radius: 10px;
+        background-color: #494949
+    }
+
+    #autocomplete::placeholder,
+    #autocomplete2::placeholder {
+        color: #FFFFFF
+    }
+
+    .ui-menu-item-wrapper:hover {
+        background-color: #494949;
+    }
+
+    #go {
+        height: 100px;
+        width: 400px;
+        font-size: 40px;
+    }
+
+    tr {
+        transition: background 1.5s;
+    }
+</style>
+<center>
+    <button id="go" onclick="redo()">Compare</button>
+    <br>
+    <label for="autocomplete" style="color: #FFFFFF; font-size: 50px;" id="margin">User 1 Search</label>
+    <br>
+    <input id="autocomplete" style="color: #FFFFFF;" placeholder="Search Term">
+    <br>
+    <br>
+    <label for="autocomplete" style="color: #FFFFFF; font-size: 50px;" id="margin">User 2 Search</label>
+    <br>
+    <input id="autocomplete2" style="color: #FFFFFF;" placeholder="Search Term">
+    <br>
+
+</center>
+<br>
+<br>
+<br>
+<br>
+<center>
+    <h1>Or</h1>
+    <br>
+    <br>
+    <button id="go" onclick="functionhmm()">Compare</button>
+</center>
+<br>
+<div class="table-responsive" style="border-style: none;">
+    <table class="table table-striped table-dark table-sm">
+        <thead>
+            <tr>
+                <th style="border-style: solid;border-right-style: solid;">Top Channels</th>
+
+                <th style="border-bottom-style: solid;">Subscribers</th>
+            </tr>
+        </thead>
+        <tbody style="border-style: none;" class="counters">
+
+
+        </tbody>
+    </table>
+</div>
+<script>
+    var c1;
+    var c2;
+    var c = 0;
+    var eee;
+    var lol = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    var tags = []
+    $.getJSON("http://localhost/all", (data) => {
+        for (var q = 0; q < data.length; q++) {
+            tags[q] = data[q].name
+        }
+        console.log(tags)
+    })
+
+    $("#autocomplete").autocomplete({
+        source: function (request, response) {
+            var matcher = new RegExp("^" + $.ui.autocomplete.escapeRegex(request.term), "i");
+            response($.grep(tags, function (item) {
+                return matcher.test(item);
+            }));
+        }
+    });
+
+    $("#autocomplete2").autocomplete({
+        source: function (request, response) {
+            var matcher = new RegExp("^" + $.ui.autocomplete.escapeRegex(request.term), "i");
+            response($.grep(tags, function (item) {
+                return matcher.test(item);
+            }));
+        }
+    });
+
+
+    function create() {
+        for (var t = 1; t <= eee; t++) {
+            var htmlcard = `<tr onclick="select(this.id)" id="tr_${t}">
+                    <td style="border-right-style: solid;border-left-style: solid;">
+                        <img style="width: 40px;height: 40px;" id="img_${t}" src="MGCounts.png">
+                        <strong id="name_${t}" class="name">Loading</strong></td>
+                        <td id="subs_${t}">TBC</td>
+                    </tr>`;
+            $('.counters').append(htmlcard)
+            c += 1;
+        }
+    }
+    $.getJSON("http://localhost/all", (data) => {
+        eee = data.length
+        create()
+        for (var q = 0; q < eee; q++) {
+            updateData(q, data)
+        }
+    })
+
+    function updateData(q, data) {
+        setTimeout(function () {
+
+            var cnb = q + 1;
+
+            data[q].Subs = Math.floor(data[q].Subs)
+            document.getElementById('subs_' + cnb + '').innerHTML = numeral(data[q].subs).format('0,0');
+            document.getElementById('name_' + cnb + '').innerHTML = data[q].name
+            document.getElementById('img_' + cnb + '').src = data[q].image
+        })
+    }
+
+
+    function redo() {
+        var cidthing1 = document.getElementById('autocomplete').value
+        var cidthing2 = document.getElementById('autocomplete2').value
+
+        var clickcount = 'http://localhost/all'
+        $.getJSON(clickcount, function (data) {
+            for (var q = 0; q < eee; q++) {
+                if (cidthing1 == data[q].name) {
+                    cidthing1 = data[q].cid
+                }
+                if (cidthing2 == data[q].name) {
+                    cidthing2 = data[q].cid
+                }
+                window.location.href = "/fake/compare?id1=" + cidthing1 + "&id2=" + cidthing2 + ""
+            }
+        });
+    }
+
+
+    var selection = 0
+    var channelselect1 = 0
+    var channelselect2 = 0
+
+    function select(clicked_value) {
+        if (selection == 0) {
+            selection++
+            channelselect1 = clicked_value
+            console.log(selection)
+            document.getElementById(clicked_value).style.backgroundColor = "lime";
+
+        } else if (selection == 1) {
+            selection++
+            channelselect2 = clicked_value
+            console.log(selection)
+            document.getElementById(clicked_value).style.backgroundColor = "red";
+        }
+
+    }
+
+
+    function functionhmm() {
+        var cidthing1;
+        var cidthing2;
+        var clickcount = 'http://localhost/all'
+        $.getJSON(clickcount, function (data) {
+            for (var q = 0; q < eee; q++) {
+                var current3 = channelselect1.split('tr_')
+                var current4 = channelselect2.split('tr_')
+                var current = parseFloat(current3[1])
+                var current2 = parseFloat(current4[1])
+                if (document.getElementById('name_' + current + '').innerHTML == data[q].name) {
+                    cidthing1 = data[q].cid
+                }
+                if (document.getElementById('name_' + current2 + '').innerHTML == data[q].name) {
+                    cidthing2 = data[q].cid
+                }
+                window.location.href = "/fake/compare?id1=" + cidthing1 + "&id2=" + cidthing2 + ""
+            }
+        })
+    }
+
+
+
+    /**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+
+
+    var disqus_config = function () {
+        this.page.url = "https://MGCounts.github.io/a";  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = "https://MGCounts.github.io/a"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+
+    (function () { // DON'T EDIT BELOW THIS LINE
+        var d = document, s = d.createElement('script');
+        s.src = 'https://MGCounts.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+
+        //comments
+</script>
+<br>
+<br>
+<br>
+<br>
+<br>
+<div id="disqus_thread"></div>
+
+</html>

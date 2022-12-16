@@ -1,0 +1,195 @@
+<html>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<link rel="stylesheet" href="../web/odometer.css">
+<script src="../web/odometer.js"></script>
+<link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400&amp;display=swap">
+<script src="https://code.highcharts.com/stock/highstock.js"></script>
+<style>
+    .highcharts-title {
+        color: #FFFFFF
+    }
+
+    .body {
+        text-align: center;
+        font-family: 'Open Sans', sans-serif;
+        background-color: #222;
+        color: #FFF;
+        font-size: 2vw;
+        margin-top: 0px;
+    }
+</style>
+
+<body class="body">
+    <center>
+        <br>
+        <img id="img" style="border-radius: 50%; width: 10vw; height: 10vw;" src="../loading.png">
+        <h1 id="namer" style="margin-top: 0.5vw;">Loading</h1>
+        <h1 id="odometer" style="font-size: 8vw; margin-top: -1vw;" class="odometer">0</h1>
+        <hr style="background-color: #FFF;">
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr);">
+            <div style="text-align: center;">
+                <h6>Commands</h6>
+                <h1 id="commands" style="font-size: 4vw; margin-top: -2vw;" class="odometer">0</h1>
+            </div>
+            <div style="text-align: center;">
+                <h6>Uploads</h6>
+                <h1 id="uploads" style="font-size: 4vw; margin-top: -2vw;" class="odometer">0</h1>
+            </div>
+            <div style="text-align: center;">
+                <h6>Comments</h6>
+                <h1 id="comments" style="font-size: 4vw; margin-top: -2vw;" class="odometer">0</h1>
+            </div>
+            <div style="text-align: center;">
+                <h6>Playlists</h6>
+                <h1 id="playlists" style="font-size: 4vw; margin-top: -2vw;" class="odometer">0</h1>
+            </div>
+            <div style="text-align: center;">
+                <h6>Posts</h6>
+                <h1 id="posts" style="font-size: 4vw; margin-top: -2vw;" class="odometer">0</h1>
+            </div>
+            <div style="text-align: center;">
+                <h6>Average</h6>
+                <h1 id="average" style="font-size: 4vw; margin-top: -2vw;" class="odometer">0</h1>
+            </div>
+        </div>
+        <hr style="background-color: #FFF;">
+        <h6>Subscribers Since Page Opened</h6>
+        <div id="chart2" style="height: 30vw; width: 100%; color: #000000;"></div>
+        <h6>Total Subscribers</h6>
+        <div id="chart1" style="height: 30vw; width: 100%; color: #000000;"></div>
+        <br>
+        <div class="table-responsive" style="border: solid 1px #FFF;">
+            <table style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th style="border: solid 1px #FFF;">Date</th>
+                        <th style="border: solid 1px #FFF;">Total Subscribers</th>
+                        <th style="border: solid 1px #FFF;">Subscriber Gain</th>
+                    </tr>
+                </thead>
+                <tbody style="border-style: none;" class="counters"></tbody>
+            </table>
+        </div>
+
+    </center>
+</body>
+<script>
+    var params = new URLSearchParams(document.location.search.substring(1));
+    var id = params.get("id");
+    var tags = [];
+    let loaded = false;
+    let chartData = [];
+    function subs() {
+        $.getJSON("http://localhost/user/" + id + "", (data) => {
+            document.getElementById('img').src = data.image
+            document.getElementById('odometer').innerHTML = data.subs
+            document.getElementById('namer').innerHTML = data.name
+            document.getElementById('commands').innerHTML = data.commands
+            document.getElementById('uploads').innerHTML = data.uploads
+            document.getElementById('comments').innerHTML = data.comments
+            document.getElementById('playlists').innerHTML = data.playlists
+            document.getElementById('posts').innerHTML = data.posts
+            document.getElementById('average').innerHTML = data.average
+            if (chart2.series[0].points.length == 1500) chart2.series[0].data[0].remove();
+            chart2.series[0].addPoint([Date.now(), Math.floor(data.subs)])
+            if (loaded == false) {
+                for (let q = 0; q < data.list.length; q++) {
+                    data.list[q][0] = data.list[q][0].split('/')[0] + "/" + (parseFloat(data.list[q][0].split('/')[1]) + 1).toString() + '/' + data.list[q][0].split('/')[2].replace('at', 'at the') + " hour (CST)"
+                    var htmlcard = `<tr>
+                    <td style="border: solid 1px #FFF;" id="date_${q}">${data.list[q][0]}</td>
+                        <td style="border: solid 1px #FFF;" id="subs_${q}">${data.list[q][1].toLocaleString()}</td>
+                        <td style="border: solid 1px #FFF;" id="subgain_${q}">${data.list[q][1].toLocaleString()}</td>
+                    </tr>`;
+                    $('.counters').append(htmlcard)
+                    chartData.push([data.list[q][0], data.list[q][1]])
+                }
+                loaded = true;
+                let chart1 = new Highcharts.chart({
+                    chart: {
+                        renderTo: 'chart1',
+                        type: 'areaspline',
+                        zoomType: 'x',
+                        backgroundColor: 'transparent',
+                        plotBorderColor: 'transparent'
+                    },
+                    title: {
+                        text: ' '
+                    },
+                    credits: {
+                        enabled: false,
+                    }, xAxis: {
+                        type: 'datetime',
+                        visible: false
+                    },
+                    yAxis: {
+                        visible: false,
+                    },
+                    plotOptions: {
+                        series: {
+                            threshold: null,
+                            fillOpacity: 0.25
+                        },
+                        area: {
+                            fillOpacity: 0.25
+                        }
+                    },
+                    series: [{
+                        showInLegend: false,
+                        name: '',
+                        marker: { enabled: false },
+                        color: '#FFF',
+                        lineColor: '#FFF',
+                        lineWidth: 2,
+                        data: chartData
+                    }]
+                });
+            }
+        });
+    }
+
+    let chart2 = new Highcharts.chart({
+        chart: {
+            renderTo: 'chart2',
+            type: 'areaspline',
+            zoomType: 'x',
+            backgroundColor: 'transparent',
+            plotBorderColor: 'transparent'
+        },
+        title: {
+            text: ' '
+        },
+        credits: {
+            enabled: false,
+        }, xAxis: {
+            type: 'datetime',
+            visible: false
+        },
+        yAxis: {
+            visible: false,
+        },
+        plotOptions: {
+            series: {
+                threshold: null,
+                fillOpacity: 0.25
+            },
+            area: {
+                fillOpacity: 0.25
+            }
+        },
+        series: [{
+            showInLegend: false,
+            name: '',
+            marker: { enabled: false },
+            color: '#FFF',
+            lineColor: '#FFF',
+            lineWidth: 2,
+        }]
+    });
+
+    subs()
+    setInterval(subs, 2000)
+</script>
+
+
+</html>

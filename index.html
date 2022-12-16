@@ -1,0 +1,94 @@
+<html>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/4.5.2/darkly/bootstrap.min.css">
+<link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400&amp;display=swap">
+<style>
+    .name {
+        margin-left: 20px;
+    }
+
+    tr:hover {
+        cursor: pointer;
+    }
+
+    #go {
+        height: 100px;
+        width: 400px;
+        font-size: 40px;
+    }
+</style>
+<div class="table-responsive" style="border-style: none;">
+    <table class="table table-striped table-dark table-sm">
+        <thead>
+            <tr>
+                <th style="border-style: solid;border-right-style: solid;">Top Channels</th>
+                <th style="border-bottom-style: solid;">Subscribers</th>
+                <th style="border-bottom-style: solid;">Commands</th>
+                <th style="border-bottom-style: solid;">Uploads</th>
+                <th style="border-bottom-style: solid;">Comments</th>
+                <th style="border-bottom-style: solid;">Playlists</th>
+                <th style="border-bottom-style: solid;">Posts</th>
+            </tr>
+        </thead>
+        <tbody style="border-style: none;" class="counters"></tbody>
+    </table>
+</div>
+<script>
+    var c = 0;
+    var eee;
+    var lol = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    var tags = []
+    $.getJSON("http://localhost/all", (data) => {
+        for (var q = 0; q < data.length; q++) {
+            tags[q] = data[q].name
+            var htmlcard = `<tr onclick="ee(this)" id="tr_${q}" cid="${data[q].cid}">
+                    <td style="border-right-style: solid;border-left-style: solid;" cid="${data[q].cid}">
+                        <img style="width: 40px;height: 40px;" id="img_${q}" src="${data[q].image}" cid="${data[q].cid}">
+                        <strong id="name_${q}" class="name" cid="${data[q].cid}">${data[q].name}</strong></td>
+                        <td id="subs_${q}" cid="${data[q].cid}">${data[q].subs.toLocaleString()}</td>
+                        <td id="commands_${q}" cid="${data[q].cid}">${data[q].commands.toLocaleString()}</td>
+                        <td id="uploads_${q}" cid="${data[q].cid}">${data[q].uploads.toLocaleString()}</td>
+                        <td id="comments_${q}" cid="${data[q].cid}">${data[q].comments.toLocaleString()}</td>
+                        <td id="playlists_${q}" cid="${data[q].cid}">${data[q].playlists.toLocaleString()}</td>
+                        <td id="posts_${q}" cid="${data[q].cid}">${data[q].posts.toLocaleString()}</td>
+                    </tr>`;
+            $('.counters').append(htmlcard)
+            c += 1;
+        }
+        console.log(tags)
+    })
+
+    function ee(elmnt) {
+        window.location.href = "/user.html?id=" + elmnt.getAttribute("cid") + "";
+    }
+
+    /**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+
+    var disqus_config = function () {
+        this.page.url = "https://MGCounts.github.io/a";  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = "https://MGCounts.github.io/a"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+
+    (function () { // DON'T EDIT BELOW THIS LINE
+        var d = document, s = d.createElement('script');
+        s.src = 'https://MGCounts.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+
+        //comments
+
+
+</script>
+<br>
+<br>
+<br>
+<br>
+<br>
+<div id="disqus_thread"></div>
+
+</html>

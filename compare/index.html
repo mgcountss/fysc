@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <script src="https://code.highcharts.com/stock/highstock.js"></script>
+  <link rel=stylesheet href="../../web/odometer.css">
+  <script src="../../web/odometer.js"></script>
+  <title>MGCounts</title>
+  <style>
+    #title,
+    #title1 {
+      font-size: 30px;
+      font-family: 'Open Sans', sans-serif;
+      color: #FFFFFF;
+      margin-top: -10px;
+      transition: 1s !important;
+    }
+
+    #odometer,
+    #odometer1 {
+      font-size: 90px;
+      font-family: 'Open Sans', sans-serif;
+      color: #FFFFFF;
+      margin-top: 0px;
+    }
+
+    #gap {
+      font-size: 70px;
+      font-family: 'Open Sans', sans-serif;
+      color: #FFFFFF;
+      margin-top: 0px;
+    }
+
+    #pass {
+      font-size: 30px;
+      font-family: 'Open Sans', sans-serif;
+      color: #FFFFFF;
+      margin-top: 0px;
+    }
+
+    #body {
+      transition: 1s !important;
+      background-color: #222;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body id="body">
+  <center>
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr);">
+      <div>
+        <br>
+        <br>
+        <h1 id="title">Loading</h1>
+        <h1 class="odometer" id="odometer"></h1>
+        <div id="chart"></div>
+        <br>
+      </div>
+      <div>
+        <br>
+        <br>
+        <h1 id="title1">Loading</h1>
+        <h1 class="odometer" id="odometer1"></h1>
+        <div id="chart1"></div>
+        <br>
+      </div>
+    </div>
+    <br>
+    <div>
+      <br>
+      <h1 class="odometer" id="gap">0</h1>
+      <br>
+      <div id="chart2"></div>
+    </div>
+  </center>
+
+</body>
+
+<script>
+  var params = new URLSearchParams(document.location.search.substring(1));
+  var odometerColor = params.get("o");
+  url = new URL(window.location.href);
+  var ID = params.get("id1");
+  var ID2 = params.get("id2");
+  var count1 = 0;
+  var count2 = 0;
+  var time = 0
+  var rate1 = 0
+  var rate2 = 0
+  var rate3 = 0
+  var rate4 = 0
+
+  async function GetStats2() {
+    let request = await fetch('http://localhost/all', { mode: "cors" })
+    let data = await request.json().catch(() => { })
+    if (!data) return;
+    for (var q = 0; q < data.length; q++) {
+      if (ID == data[q].cid) {
+        odometer.innerHTML = data[q].subs
+        title.innerHTML = data[q].name
+        rate1 = data[q].min
+        rate2 = data[q].max
+        if (chart.series[0].points.length == 1500) chart.series[0].data[0].remove();
+        chart.series[0].addPoint([Date.now(), Math.floor(data[q].subs)])
+        count1 = data[q].subs
+      }
+      if (ID2 == data[q].cid) {
+        odometer1.innerHTML = data[q].subs
+        title1.innerHTML = data[q].name
+        rate3 = data[q].min
+        rate4 = data[q].max
+        if (chart1.series[0].points.length == 1500) chart1.series[0].data[0].remove();
+        chart1.series[0].addPoint([Date.now(), Math.floor(data[q].subs)])
+        count2 = data[q].subs
+      }
+    }
+    gap.innerHTML = count1 - count2
+    setTimeout(graphtimeout, 3000)
+
+    function graphtimeout() {
+      if (chart2.series[0].points.length == 1500) chart2.series[0].data[0].remove();
+      chart2.series[0].addPoint([Date.now(), Math.floor(count1 - count2)])
+    }
+  }
+  setInterval(GetStats2, 2000)
+  GetStats2()
+  var textBright = "#bdbdbd"
+  var lineColor = "#000000"
+  var maxPoints = 20000;
+  var chart1 = new Highcharts.chart({
+    chart: {
+      renderTo: 'chart1',
+      type: 'spline',
+      zoomType: 'x',
+      backgroundColor: 'transparent',
+      plotBorderColor: 'transparent'
+    },
+    title: {
+      text: ' '
+    },
+    xAxis: {
+      type: 'datetime',
+      tickPixelInterval: 500,
+      gridLineColor: textBright,
+      labels: {
+        style: {
+          color: textBright
+        }
+      },
+      lineColor: lineColor,
+      minorGridLineColor: '#bdbdbd',
+      tickColor: lineColor,
+      title: {
+        style: {
+          color: textBright
+        }
+      }
+    },
+    yAxis: {
+      title: {
+        text: ''
+      },
+      gridLineColor: textBright,
+      labels: {
+        style: {
+          color: textBright
+        }
+      },
+      lineColor: lineColor,
+      minorGridLineColor: '#bdbdbd',
+      tickColor: lineColor
+    },
+    credits: {
+      enabled: true,
+      text: "MGCounts"
+    },
+
+    series: [{
+      showInLegend: false,
+      name: 'Followers',
+      marker: { enabled: false },
+      color: '#000000',
+      lineColor: '#FFFFFF'
+    }]
+  });
+
+  var chart = new Highcharts.chart({
+    chart: {
+      renderTo: 'chart',
+      type: 'spline',
+      zoomType: 'x',
+      backgroundColor: 'transparent',
+      plotBorderColor: 'transparent'
+    },
+    title: {
+      text: ' '
+    },
+    xAxis: {
+      type: 'datetime',
+      tickPixelInterval: 500,
+      gridLineColor: textBright,
+      labels: {
+        style: {
+          color: textBright
+        }
+      },
+      lineColor: lineColor,
+      minorGridLineColor: '#bdbdbd',
+      tickColor: lineColor,
+      title: {
+        style: {
+          color: textBright
+        }
+      }
+    },
+    yAxis: {
+      title: {
+        text: ''
+      },
+      gridLineColor: textBright,
+      labels: {
+        style: {
+          color: textBright
+        }
+      },
+      lineColor: lineColor,
+      minorGridLineColor: '#bdbdbd',
+      tickColor: lineColor
+    },
+    credits: {
+      enabled: true,
+      text: "MGCounts"
+    },
+
+    series: [{
+      showInLegend: false,
+      name: 'Followers',
+      marker: { enabled: false },
+      color: '#000000',
+      lineColor: '#FFFFFF'
+    }]
+  });
+
+
+  var chart2 = new Highcharts.chart({
+    chart: {
+      renderTo: 'chart2',
+      type: 'spline',
+      zoomType: 'x',
+      backgroundColor: 'transparent',
+      plotBorderColor: 'transparent'
+    },
+    title: {
+      text: ' '
+    },
+    xAxis: {
+      type: 'datetime',
+      tickPixelInterval: 500,
+      gridLineColor: textBright,
+      labels: {
+        style: {
+          color: textBright
+        }
+      },
+      lineColor: lineColor,
+      minorGridLineColor: '#bdbdbd',
+      tickColor: lineColor,
+      title: {
+        style: {
+          color: textBright
+        }
+      }
+    },
+    yAxis: {
+      title: {
+        text: ''
+      },
+      gridLineColor: textBright,
+      labels: {
+        style: {
+          color: textBright
+        }
+      },
+      lineColor: lineColor,
+      minorGridLineColor: '#bdbdbd',
+      tickColor: lineColor
+    },
+    credits: {
+      enabled: true,
+      text: "MGCounts"
+    },
+
+    series: [{
+      showInLegend: false,
+      name: 'Gap',
+      marker: { enabled: false },
+      color: '#000000',
+      lineColor: '#FFFFFF'
+    }]
+  });
+
+
+  function updateimage(image) {
+    document.querySelector(".image").src = image;
+  }
+
+  function updateimage2(image2) {
+    document.querySelector(".image2").src = image2;
+  }
+
+</script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-177075755-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() { dataLayer.push(arguments); }
+  gtag('js', new Date());
+
+  gtag('config', 'UA-177075755-1');
+</script>
+
+
+
+</html>
