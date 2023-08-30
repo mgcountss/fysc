@@ -1,0 +1,199 @@
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/highcharts-3d.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+<style>
+  #container {
+    height: 400px;
+    background-color: #222222;
+  }
+
+  .highcharts-figure,
+  .highcharts-data-table table {
+    min-width: 310px;
+    max-width: 800px;
+    margin: 1em auto;
+  }
+
+  .highcharts-data-table table {
+    font-family: Verdana, sans-serif;
+    border-collapse: collapse;
+    border: 1px solid #222222;
+    margin: 10px auto;
+    text-align: center;
+    width: 100%;
+    max-width: 500px;
+  }
+
+  .highcharts-data-table caption {
+    padding: 1em 0;
+    font-size: 1.2em;
+    color: #222222;
+  }
+
+  .highcharts-data-table th {
+    font-weight: 600;
+    padding: 0.5em;
+  }
+
+  .highcharts-data-table td,
+  .highcharts-data-table th,
+  .highcharts-data-table caption {
+    padding: 0.5em;
+  }
+
+  .highcharts-data-table thead tr,
+  .highcharts-data-table tr:nth-child(even) {
+    background: #222222;
+  }
+
+  .highcharts-data-table tr:hover {
+    background: #222222;
+  }
+
+  body {
+    background-color: #FFFFFF;
+  }
+
+  .top {
+    display: flex;
+    flex-direction: row;
+    flex: 10;
+    column-gap: 200px;
+    margin-left: 200px
+  }
+
+  h1,
+  h5 {
+    color: #FFFFFF;
+  }
+
+  .highcharts-figure,
+  .highcharts-data-table table {
+    min-width: 310px;
+    max-width: 800px;
+    margin: 1em auto;
+  }
+
+  #container {
+    height: 400px;
+  }
+
+  .highcharts-data-table table {
+    font-family: Verdana, sans-serif;
+    border-collapse: collapse;
+    border: 1px solid #EBEBEB;
+    margin: 10px auto;
+    text-align: center;
+    width: 100%;
+    max-width: 500px;
+  }
+
+  .highcharts-data-table caption {
+    padding: 1em 0;
+    font-size: 1.2em;
+    color: #555;
+  }
+
+  .highcharts-data-table th {
+    font-weight: 600;
+    padding: 0.5em;
+  }
+
+  .highcharts-data-table td,
+  .highcharts-data-table th,
+  .highcharts-data-table caption {
+    padding: 0.5em;
+  }
+
+  .highcharts-data-table thead tr,
+  .highcharts-data-table tr:nth-child(even) {
+    background: #f8f8f8;
+  }
+
+  .highcharts-data-table tr:hover {
+    background: #f1f7ff;
+  }
+
+  #chart {
+    width: 100%;
+    height: 2000px;
+  }
+</style>
+<div id="chart"></div>
+<script>
+  setInterval(GetStats2, 2000)
+  var data2 = []
+  var namess = []
+  async function GetStats2() {
+    let request = await fetch('/all', { mode: "cors" })
+    let data = await request.json().catch(() => { })
+    if (!data) return;
+    for (var q = 0; q < data.length; q++) {
+      var qq = q + 1
+      data2.push([data[q].name.replace(/</g, "&lt;").replace(/>/g, "&gt;"), Math.floor(data[q].subs)])
+      namess.push(data[q].name.replace(/</g, "&lt;").replace(/>/g, "&gt;"))
+    }
+    chart2.series[0].setData(data2);
+    chart2.xAxis[0].setCategories(namess);
+    data2 = []
+    namess = []
+  }
+  var textBright = "#000000"
+  var lineColor = "#000000"
+  var maxPoints = 20000;
+  var chart2 = new Highcharts.chart({
+    chart: {
+      renderTo: 'chart',
+      type: 'bar',
+      zoomType: 'x',
+      backgroundColor: 'transparent',
+      plotBorderColor: 'transparent'
+    },
+    title: {
+      text: ' '
+    },
+    xAxis: {
+      categories: namess,
+      tickPixelInterval: 500,
+      gridLineColor: textBright,
+      labels: {
+        style: {
+          color: textBright
+        }
+      },
+      lineColor: lineColor,
+      minorGridLineColor: '#000000',
+      tickColor: lineColor,
+      title: {
+        style: {
+          color: textBright
+        }
+      }
+    },
+    yAxis: {
+      min: 0,
+      labels: {
+        overflow: 'justify'
+      }
+    },
+    plotOptions: {
+      bar: {
+        dataLabels: {
+          enabled: true
+        }
+      }
+    },
+    credits: {
+      enabled: true,
+      text: "MGCounts"
+    },
+    series: [{
+      showInLegend: false,
+      marker: { enabled: false },
+      color: "#000000",
+      lineColor: '#FF0000'
+    }]
+  });
+</script>

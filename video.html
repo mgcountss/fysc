@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://fysc.mgcounts.com/bootstrap.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <meta charset="utf-8">
+    <meta property="twitter:title" content="SFMGTube">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://fysc.mgcounts.com">
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://fysc.mgcounts.com">
+    <meta property="og:description" content="SFMGTube">
+    <meta property="twitter:description" content="SFMGTube">
+    <title>
+        SFMGTube
+    </title>
+    <style>
+        body {
+            background-color: #202020;
+        }
+
+        #edit {
+            border-radius: 50%;
+        }
+
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #2a2a2a;
+        }
+
+        li {
+            float: left;
+        }
+
+        li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        li a:hover:not(.active) {
+            background-color: #111;
+        }
+
+        .fa:hover {
+            cursor: pointer;
+        }
+
+        #dropdown {
+            transition: 500ms opacity, 500ms height;
+        }
+
+        #search {
+            background-color: #202020;
+            width: 150%
+        }
+
+        .comments hr {
+            width: 100%;
+        }
+
+        .video {
+            text-align: left;
+        }
+
+        #search {
+            color: #FFF;
+        }
+
+        hr {
+            height: 1px;
+            background: #606060;
+            border: none;
+        }
+
+        .comments hr {
+            width: 100%;
+        }
+
+        .video {
+            text-align: left;
+        }
+
+        @media screen and (max-width: 600px) {
+            #video {
+                width: 100vw;
+                height: 200px;
+            }
+        }
+
+        #video {
+            width: 75vw;
+        }
+
+        .autoplay {
+            width: 15vw;
+            padding-right: 5px;
+        }
+
+        #search {
+            color: #FFF;
+        }
+
+        .video-thing {
+            width: 100vw;
+            height: 100vh;
+            text-align: left;
+        }
+    </style>
+</head>
+
+<body class="body">
+    <center>
+        <ul>
+            <li><a href="/" style="font-size: 20px; font-weight: 600;">SFMGTube</a></li>
+            <li><input class="form-control mr-sm-2" id="search" placeholder="Search" style="margin-top: 10px;"></li>
+            <li style="margin-top: 10px; margin-left: 0px;"><button
+                    style="color: #FFF; height: 37px; width: 100px; box-sizing: border-box; display: inline-block; border-radius: 0.25rem; border: solid #FFF 1px; background-color: #202020;"
+                    onclick="search()" style="margin-top: 20px;">Search</button></li>
+            <li style="float: right;">
+                <div style="display: flex;">
+                    <i onclick="window.location.href = 'https://www.youtube.com/@sfmg/live'" id="upload"
+                        class="fa fa-upload" aria-hidden="true"
+                        style="font-size: 30px; margin-top: 17px; width: 60px;"></i>
+                    <a href="/edit"><img src="" class="edit" id="edit" style="height: 35px; width: 35px;"></a>
+                </div>
+            </li>
+        </ul>
+        <div class="video-thing" style="width: 100%; height: 100%; display: flex; gap: 5vw 5vw; padding: 2vw;">
+            <div class="video" style="width: 75vw;">
+                <video id="video" controls="" autoplay="" style="width: 100%; height: 40vw;">
+                    <source src="" type="video/mp4">
+                </video>
+                <div style="display: flex;">
+                    <div style="width: 40%; text-align: left;">
+                        <h2 id="title"
+                            style="text-align: left; font-weight: bolder; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical;">
+                            Title
+                        </h2>
+                        <h5 id="views"
+                            style="text-align: left; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical;">
+                            0 Views
+                        </h5>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; margin-left: 0px;">
+                        <div style="width: 100%;">
+                            <i onclick="" id="like" class="fa fa-thumbs-up"
+                                style="float: left; margin-top: 0px; font-size: 40px;"></i>
+                            <h3 id="likes" style="margin-top: 5px; font-size: 25px; float: left; margin-left: 10px;">
+                                0
+                            </h3>
+                        </div>
+                        <div style="width: 100%;">
+                            <i onclick="" id="dislike" class="fa fa-thumbs-down"
+                                style="float: left; margin-top: -5px; font-size: 40px;"></i>
+                            <h3 id="dislikes" style="margin-top: 3px; font-size: 25px; float: left; margin-left: 10px;">
+                                0
+                            </h3>
+                        </div>
+                        <div style="width: 100%;">
+                            <i onclick="" id="comment" class="fa fa-comment"
+                                style="float: left; margin-top: -5px; font-size: 40px;"></i>
+                            <h3 id="comments" style="margin-top: 3px; font-size: 25px; float: left; margin-left: 10px;">
+                                0
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+                <div style="padding-top: 10px; display: grid; grid-template-columns: 4fr 1fr; ">
+                    <a id="use" href="/user/">
+                        <div style="width: 100%; text-align: left;">
+                            <img src="" id="ownerPFP"
+                                style="width: 75px; height: 75px; border-radius: 50%; float: left;">
+                            <h2 style="color: #FFF; font-size: 25px;" id="ownerName">
+                                Name
+                            </h2>
+                            <h2 id="subs" style="color: #FFF; font-size: 30px; margin-top: -7px;">
+                                0 Subscribers
+                            </h2>
+                        </div>
+                    </a>
+                    <button onclick="" id="subscribe"
+                        style="margin-left: auto; order: 2; margin-top: 10px; background-color: red; border: solid 1px #FFF; color: #FFF; font-size: 30px; width: 225px; height: 75px; font-weight: bolder;">Subscribe</button>
+                </div>
+                <br>
+            </div>
+            <div class="autoplay" id="autoplay" style="width: 15vw;">
+
+            </div>
+        </div>
+
+    </center>
+</body>
+<script>
+    let vid = ""
+    if (document.URL.includes('/videos/')) {
+        vid = document.URL.split('/videos/')[1].split('!')[0]
+    } else {
+        vid = document.URL.split('.html?/')[1].split('!')[0]
+    }
+    let user = document.URL.split('!')[1]
+    fetch('https://fysc.mgcounts.com/video/' + vid + '!' + user)
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById('title').textContent = data.title
+            document.title = data.title + " - SFMGTube"
+            document.getElementById('views').textContent = Math.floor(data.views).toLocaleString() + ' Views'
+            document.getElementById('likes').textContent = Math.floor(data.likes).toLocaleString()
+            document.getElementById('dislikes').textContent = Math.floor(data.dislikes).toLocaleString()
+            document.getElementById('comments').textContent = Math.floor(data.comments).toLocaleString()
+        })
+    fetch('https://fysc.mgcounts.com/user2/' + user)
+        .then(res => res.json())
+        .then(user2 => {
+            document.getElementById('use').href = '/user?id=' + user
+            document.getElementById('ownerPFP').src = user2.image
+            document.getElementById('ownerName').textContent = user2.name
+            document.getElementById('subs').textContent = Math.floor(user2.subs).toLocaleString() + ' Subscribers'
+        })
+    fetch('https://fysc.mgcounts.com/site/all?sort=posted')
+        .then(res => res.json())
+        .then(data => {
+            data.uploads.forEach(upload => {
+                let card = `<div>
+                        <a href="/videos/${upload.id}!${upload.ownerID}">
+                            <img src="${upload.ownerImage}"
+                                style="object-fit: cover; width: 15vw; height: 8vw;">
+                            <h4
+                                style="overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; color: #FFF; font-weight: bolder;">
+                               ${upload.title}
+                            </h4>
+                            <h5
+                                style="overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; color: #FFF; margin-top: -10px;">
+                                ${Math.floor(upload.views).toLocaleString()} views · ${time(upload.posted)}
+                            </h5>
+                        </a>
+                        <a href="/user/${upload.ownerID}">
+                            <div style="width: 80%; text-align: left; display: flex; margin-top: -10px;">
+                                <img src="${upload.ownerImage}"
+                                    style="border-radius: 50%; width: 30px; height: 30px; object-fit: cover; border: solid #000;">
+                                <h6
+                                    style="margin-top: 5px; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; color: #FFF; font-weight: bolder;">
+                                    ${upload.owner}
+                                </h6>
+                            </div>
+                        </a>
+                        <div>
+                        </div>
+                        <hr>
+                        </a>
+                    </div>`
+                document.getElementById('autoplay').innerHTML += card
+            })
+        })
+    function time(previous) {
+        let current = new Date();
+        var msPerMinute = 60 * 1000;
+        var msPerHour = msPerMinute * 60;
+        var msPerDay = msPerHour * 24;
+        var msPerMonth = msPerDay * 30;
+        var msPerYear = msPerDay * 365;
+        var elapsed = current.getTime() - new Date(parseInt(previous)).getTime();
+        if (elapsed < msPerMinute) {
+            return Math.round(elapsed / 1000) + ' seconds ago';
+        }
+        else if (elapsed < msPerHour) {
+            return Math.round(elapsed / msPerMinute) + ' minutes ago';
+        }
+        else if (elapsed < msPerDay) {
+            return Math.round(elapsed / msPerHour) + ' hours ago';
+        }
+        else if (elapsed < msPerMonth) {
+            return Math.round(elapsed / msPerDay) + ' days ago';
+        }
+        else if (elapsed < msPerYear) {
+            return Math.round(elapsed / msPerMonth) + ' months ago';
+        }
+        else {
+            return Math.round(elapsed / msPerYear) + ' years ago';
+        }
+    }
+
+    function search() {
+        window.location.href = "/search?term=" + document.getElementById('search').value
+    }
+</script>
+
+</html>

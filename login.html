@@ -1,0 +1,28 @@
+<h1>Login lol</h1>
+<input placeholder="Channel Name" id="username" />
+<input placeholder="Password" id="password" type="password" />
+<button onclick="login()">Login</button>
+<script>
+    function login() {
+        fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    username: document.getElementById('username').value,
+                    password: document.getElementById('password').value
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    localStorage.setItem('token', data.token)
+                    alert('Logged in!')
+                    window.location.href = '/edit'
+                } else {
+                    alert('Error:'+" "+data.error)
+                }
+            })
+    }
+</script>

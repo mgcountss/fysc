@@ -1,0 +1,210 @@
+<link rel="stylesheet" href="./odometer.css">
+<script src="./odometer.js"></script>
+<script src="./highstock.js"></script>
+<link rel="stylesheet" href="./bootstrap.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+    body {
+        background-color: #141414;
+        color: #FFF;
+        font-family: Arial, Helvetica, sans-serif;
+        text-align: center;
+    }
+
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #202020;
+    }
+
+    li {
+        float: left;
+        cursor: pointer;
+    }
+
+    li a {
+        display: block;
+        color: white;
+        text-align: center;
+        padding: 1vw 1vw;
+        text-decoration: none;
+    }
+</style>
+
+<body>
+    <ul>
+        <li><a href="/" style="font-size: 20px; font-weight: 600;">SFMGTube</a></li>
+        <li><input class="form-control mr-sm-2" id="search" placeholder="Search" style="margin-top: 10px;"></li>
+        <li style="margin-top: 10px; margin-left: 0px;"><button
+                style="color: #FFF; height: 37px; width: 100px; box-sizing: border-box; display: inline-block; border-radius: 0.25rem; border: solid #FFF 1px; background-color: #202020;"
+                onclick="search()" style="margin-top: 20px;">Search</button></li>
+        <li style="float: right;">
+            <div style="display: flex;">
+                <i onclick="window.location.href = 'https://www.youtube.com/@sfmg/live'" id="upload"
+                    class="fa fa-upload" aria-hidden="true" style="font-size: 30px; margin-top: 17px; width: 60px;"></i>
+                <a href="/edit"><img src="" class="edit" id="edit" style="height: 35px; width: 35px;"></a>
+            </div>
+        </li>
+    </ul>
+    <center>
+        <div style="column-gap: 30px; margin-top: 20px; width: 90%;" id="statsTab">
+            <img id="pfp" style="border-radius: 50%; width: 15vw; height: 15vw; margin-top: 0px;" src="">
+            <h1 id="name" style="font-size: 5vw; margin-top: -0.5vw;">Name</h1>
+            <h1 id="odometer" style="font-size: 10vw; margin-top: -1.5vw;" class="odometer">0</h1>
+            <div id="chart" style="height: 30vw; width: 100%; color: #000000; border: solid 0.3vw #FFF; margin: 1vw;">
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 2vw;">
+                <div style="border: solid #FFF; width: 100%;">
+                    <h3>Likes</h3>
+                    <h1 id="likes"></h1>
+                </div>
+                <div style="border: solid #FFF; width: 100%;">
+                    <h3>Dislikes</h3>
+                    <h1 id="dislikes"></h1>
+                </div>
+                <div style="border: solid #FFF; width: 100%;">
+                    <h3>Comments (received)</h3>
+                    <h1 id="commentCount"></h1>
+                </div>
+                <div style="border: solid #FFF; width: 100%;">
+                    <h3>Views</h3>
+                    <h1 id="views"></h1>
+                </div>
+                <div style="border: solid #FFF; width: 100%;">
+                    <h3>Videos</h3>
+                    <h1 id="videos"></h1>
+                </div>
+                <div style="border: solid #FFF; width: 100%;">
+                    <h3>Commands</h3>
+                    <h1 id="commands"></h1>
+                </div>
+                <div style="border: solid #FFF; width: 100%;">
+                    <h3>Streams</h3>
+                    <h1 id="streams"></h1>
+                </div>
+                <div style="border: solid #FFF; width: 100%; margin-top: 15px;">
+                    <h3>Shorts</h3>
+                    <h1 id="shorts"></h1>
+                </div>
+                <div style="border: solid #FFF; width: 100%; margin-top: 15px;">
+                    <h3>Songs</h3>
+                    <h1 id="songs"></h1>
+                </div>
+                <div style="border: solid #FFF; width: 100%; margin-top: 15px;">
+                    <h3>Comments (given)</h3>
+                    <h1 id="comments">></h1>
+                </div>
+                <div style="border: solid #FFF; width: 100%; margin-top: 15px;">
+                    <h3>Playlists</h3>
+                    <h1 id="playlists">></h1>
+                </div>
+                <div style="border: solid #FFF; width: 100%; margin-top: 15px;">
+                    <h3>Posts</h3>
+                    <h1 id="posts"></h1>
+                </div>
+                <div style="border: solid #FFF; width: 100%; margin-top: 15px;">
+                    <h3>Stories</h3>
+                    <h1 id="stories"></h1>
+                </div>
+                <div style="border: solid #FFF; width: 100%; margin-top: 15px;">
+                    <h3>Podcasts</h3>
+                    <h1 id="podcasts"></h1>
+                </div>
+                <div style="border: solid #FFF; width: 100%; margin-top: 15px;">
+                    <h3>Last Message</h3>
+                    <h1 id="last" style="font-size: 1.5vw;"></h1>
+                </div>
+            </div>
+        </div>
+    </center>
+    <script>
+        let id = document.URL.split('?id=')[1]
+        function update() {
+            fetch('/user2/' + id + '')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('odometer').innerHTML = Math.floor(data.subs)
+                    document.getElementById('name').innerHTML = data.name
+                    document.getElementById('pfp').src = data.image
+                    setTimeout(function () {
+                        document.getElementById('videos').innerHTML = Math.floor(data.videos).toLocaleString()
+                        document.getElementById('commands').innerHTML = Math.floor(data.commands).toLocaleString()
+                        document.getElementById('streams').innerHTML = Math.floor(data.streams).toLocaleString()
+                        document.getElementById('shorts').innerHTML = Math.floor(data.shorts).toLocaleString()
+                        document.getElementById('songs').innerHTML = Math.floor(data.songs).toLocaleString()
+                        document.getElementById('comments').innerHTML = Math.floor(data.comments).toLocaleString()
+                        document.getElementById('playlists').innerHTML = Math.floor(data.playlists).toLocaleString()
+                        document.getElementById('posts').innerHTML = Math.floor(data.posts).toLocaleString()
+                        document.getElementById('stories').innerHTML = Math.floor(data.stories).toLocaleString()
+                        document.getElementById('podcasts').innerHTML = Math.floor(data.podcasts).toLocaleString()
+                        document.getElementById('last').innerHTML = new Date(data.lastMSG)
+                        document.getElementById('likes').innerHTML = Math.floor(data.likes).toLocaleString()
+                        document.getElementById('dislikes').innerHTML = Math.floor(data.dislikes).toLocaleString()
+                        document.getElementById('views').innerHTML = Math.floor(data.views).toLocaleString()
+                        document.getElementById('commentCount').innerHTML = Math.floor(data.commentCount).toLocaleString()
+                        if (chart.series[0].points.length == 1500) chart.series[0].data[0].remove();
+                        chart.series[0].addPoint([Date.now(), Math.floor(data.subs)])
+                    }, 2000)
+                })
+        }
+        let chart = new Highcharts.chart({
+            chart: {
+                renderTo: 'chart',
+                type: 'areaspline',
+                zoomType: 'x',
+                backgroundColor: 'transparent',
+                plotBorderColor: 'transparent'
+            },
+            title: {
+                text: ' '
+            },
+            credits: {
+                enabled: false,
+            }, xAxis: {
+                type: 'datetime',
+                visible: false
+            },
+            yAxis: {
+                visible: false,
+            },
+            plotOptions: {
+                series: {
+                    threshold: null,
+                    fillOpacity: 0.25
+                },
+                area: {
+                    fillOpacity: 0.25
+                }
+            },
+            series: [{
+                showInLegend: false,
+                name: 'Subscribers',
+                marker: { enabled: false },
+                color: '#FFF',
+                lineColor: '#FFF',
+                lineWidth: 2
+            }]
+        });
+
+        update()
+        setInterval(update, 4000)
+        
+        if (localStorage.getItem('token')) {
+        fetch('/me', {
+            headers: {
+                'Authorization': localStorage.getItem('token')
+            }
+        }).then(response => response.json()).then(data => {
+            if (data.success) {
+                document.getElementById('edit').src = data.user.image
+            }
+        })
+    }
+
+    function search() {
+        window.location.href = "/search?term=" + document.getElementById('search').value
+    }
+    </script>
+</body>

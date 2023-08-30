@@ -1,0 +1,124 @@
+<link rel="stylesheet" href="./odometer.css">
+<script src="./odometer.js"></script>
+<script src="./highstock.js"></script>
+<link rel="stylesheet" href="./bootstrap.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+    body {
+        background-color: #141414;
+        color: #FFF;
+        font-family: Arial, Helvetica, sans-serif;
+        text-align: center;
+    }
+
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #202020;
+    }
+
+    li {
+        float: left;
+        cursor: pointer;
+    }
+
+    li a {
+        display: block;
+        color: white;
+        text-align: center;
+        padding: 1vw 1vw;
+        text-decoration: none;
+    }
+</style>
+
+<body>
+    <ul>
+        <li><a href="/" style="font-size: 20px; font-weight: 600;">SFMGTube</a></li>
+        <li><input class="form-control mr-sm-2" id="search" placeholder="Search" style="margin-top: 10px;"></li>
+        <li style="margin-top: 10px; margin-left: 0px;"><button
+                style="color: #FFF; height: 37px; width: 100px; box-sizing: border-box; display: inline-block; border-radius: 0.25rem; border: solid #FFF 1px; background-color: #202020;"
+                onclick="search()" style="margin-top: 20px;">Search</button></li>
+        <li style="float: right;">
+            <div style="display: flex;">
+                <i onclick="window.location.href = 'https://www.youtube.com/@sfmg/live'" id="upload"
+                    class="fa fa-upload" aria-hidden="true" style="font-size: 30px; margin-top: 17px; width: 60px;"></i>
+                <a href="/edit"><img src="" class="edit" id="edit" style="height: 35px; width: 35px;"></a>
+            </div>
+        </li>
+    </ul>
+    <center>
+        <select id="select" onchange="selected = this.value; update()" style="margin-top: 20px;">
+            <option value="videos">Videos</option>
+            <option value="shorts">Shorts</option>
+            <option value="streams">Streams</option>
+            <option value="songs">Songs</option>
+            <option value="podcasts">Podcasts</option>
+            <option value="channels">Channels</option>
+        </select>
+        <div id="trending" style="margin-top: 20px; display: grid; grid-template-columns: repeat(3, 1fr);"></div>
+    </center>
+    <script>
+        let selected = "videos"
+        if (document.URL.includes('?')) {
+            selected = document.URL.split('?sort=')[1]
+        }
+        function update() {
+            document.URL = `?sort=${selected}`
+            fetch('/trending2/' + selected)
+                .then(response => response.json())
+                .then(data => {
+                    data = data.sort((a, b) => b.gain - a.gain)
+                    if (selected == "channels") {
+                        document.getElementById('trending').innerHTML = ''
+                        for (let i = 0; i < data.length; i++) {
+                            document.getElementById('trending').innerHTML += `
+                    <div style="display: inline-block; margin: 10px;">
+                        <a href="/user?id=${data[i].cid}" style="color: #FFF; font-weight: 600;">
+                            <img src="${data[i].image}" style="height: 200px; width: 200px; border-radius: 50%;">
+                            <h2>${data[i].name}</h2>
+                        <p>${Math.floor(data[i].subs).toLocaleString()} Subs</p>
+                        <p style="margin-top: -20px;">+${Math.floor(data[i].gain).toLocaleString()}</p>
+                        </a>
+                            </div>`
+                        }
+                    } else {
+                        document.getElementById('trending').innerHTML = ''
+                        for (let i = 0; i < data.length; i++) {
+                            document.getElementById('trending').innerHTML += `
+                    <div style="display: inline-block; margin: 10px;">
+                        <a href="/videos/${data[i].id}!${data[i].uploader.cid}" style="color: #FFF; font-weight: 600;">
+                            <img src="${data[i].uploader.image}" style="height: 200px; width: 350px;">
+                        </a>
+                        <div style="display: flex; margin-top: 10px;">
+                            <img src="${data[i].uploader.image}" style="height: 30px; width: 30px; border-radius: 50%;">
+                            <div style="margin-left: 10px; text-align: left;">
+                                <a href="/user?id=${data[i].uploader.cid}" style="color: #FFF; font-weight: 600;">${data[i].uploader.name}</a>
+                                <p style="color: #FFF; font-size: 12px;">${Math.floor(data[i].views).toLocaleString()} Views, +${Math.floor(data[i].gain).toLocaleString()}</p>
+                            </div>
+                        </div>`
+                        }
+                    }
+                })
+        }
+        setInterval(update, 11000)
+        update()
+        
+        if (localStorage.getItem('token')) {
+        fetch('/me', {
+            headers: {
+                'Authorization': localStorage.getItem('token')
+            }
+        }).then(response => response.json()).then(data => {
+            if (data.success) {
+                document.getElementById('edit').src = data.user.image
+            }
+        })
+    }
+
+        function search() {
+            window.location.href = "/search?term=" + document.getElementById('search').value
+        }
+    </script>
+</body>

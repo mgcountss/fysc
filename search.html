@@ -1,0 +1,112 @@
+<link rel="stylesheet" href="./odometer.css">
+<script src="./odometer.js"></script>
+<script src="./highstock.js"></script>
+<link rel="stylesheet" href="./bootstrap.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+    body {
+        background-color: #141414;
+        color: #FFF;
+        font-family: Arial, Helvetica, sans-serif;
+        text-align: center;
+    }
+
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #202020;
+    }
+
+    li {
+        float: left;
+        cursor: pointer;
+    }
+
+    li a {
+        display: block;
+        color: white;
+        text-align: center;
+        padding: 1vw 1vw;
+        text-decoration: none;
+    }
+</style>
+
+<body>
+    <ul>
+        <li><a href="/" style="font-size: 20px; font-weight: 600;">SFMGTube</a></li>
+        <li><input class="form-control mr-sm-2" id="search" placeholder="Search" style="margin-top: 10px;"></li>
+        <li style="margin-top: 10px; margin-left: 0px;"><button
+                style="color: #FFF; height: 37px; width: 100px; box-sizing: border-box; display: inline-block; border-radius: 0.25rem; border: solid #FFF 1px; background-color: #202020;"
+                onclick="window.location.href = '/old'" style="margin-top: 20px;">Search</button></li>
+        <li style="float: right;">
+            <div style="display: flex;">
+                <i onclick="window.location.href = 'https://www.youtube.com/@sfmg/live'" id="upload"
+                    class="fa fa-upload" aria-hidden="true" style="font-size: 30px; margin-top: 17px; width: 60px;"></i>
+                <a href="/edit"><img src="" class="edit" id="edit" style="height: 35px; width: 35px;"></a>
+            </div>
+        </li>
+    </ul>
+    <center id="main">
+            <div>
+                <input placeholder="Search" id="search1" style="margin-top: 10px; width: 90%; height: 50px;"><br>
+                <button
+                    style="color: #FFF; font-size: 50px; box-sizing: border-box; display: inline-block; border-radius: 0.25rem; border: solid #FFF 1px; background-color: #202020;"
+                    onclick="search1()" style="margin-top: 20px;">Search</button>
+                <hr>
+                <div id="results1"></div>
+            </div>
+        <br>
+    </center>
+    <script>
+        if (document.URL.includes('term')) {
+            document.getElementById('search1').value = document.URL.split('?term=')[1]
+            document.getElementById('search1').value = document.getElementById('search1').value.replace(/%20/g, ' ')
+            search1()
+        }
+        function search1() {
+            document.getElementById('results1').innerHTML = ''
+            fetch('/search', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    search: document.getElementById('search1').value
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(user => {
+                        document.getElementById('results1').innerHTML += `
+                        <div style="display: flex; margin-top: 10px;" id="u1_${user.cid}">
+                            <img src="${user.image}" style="height: 100px; width: 100px;">
+                            <div style="margin-left: 10px; text-align: left;">
+                                <h3 style="margin-top:-5px;">${user.name}</h3>
+                                <p style="margin-top:-5px;">${user.subs.toLocaleString()} subscribers</p>
+                                <button style="margin-top:-5px;" onclick="go('${user.cid}')">Select</button>
+                            </div>
+                        </div>
+                        `
+                    })
+                })
+        }
+
+        function go(id) {
+            window.location.href = '/user?id=' + id
+        }
+
+        if (localStorage.getItem('token')) {
+        fetch('/me', {
+            headers: {
+                'Authorization': localStorage.getItem('token')
+            }
+        }).then(response => response.json()).then(data => {
+            if (data.success) {
+                document.getElementById('edit').src = data.user.image
+            }
+        })
+    }
+    </script>
+</body>

@@ -1,0 +1,333 @@
+<link rel="stylesheet" href="./odometer.css">
+<script src="./odometer.js"></script>
+<script src="./highstock.js"></script>
+<link rel="stylesheet" href="./bootstrap.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+    body {
+        background-color: #141414;
+        color: #FFF;
+        font-family: Arial, Helvetica, sans-serif;
+        text-align: center;
+    }
+
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #202020;
+    }
+
+    li {
+        float: left;
+        cursor: pointer;
+    }
+
+    li a {
+        display: block;
+        color: white;
+        text-align: center;
+        padding: 1vw 1vw;
+        text-decoration: none;
+    }
+</style>
+
+<body>
+    <ul>
+        <li><a href="/" style="font-size: 20px; font-weight: 600;">SFMGTube</a></li>
+        <li><input class="form-control mr-sm-2" id="search" placeholder="Search" style="margin-top: 10px;"></li>
+        <li style="margin-top: 10px; margin-left: 0px;"><button
+                style="color: #FFF; height: 37px; width: 100px; box-sizing: border-box; display: inline-block; border-radius: 0.25rem; border: solid #FFF 1px; background-color: #202020;"
+                onclick="search()" style="margin-top: 20px;">Search</button></li>
+        <li style="float: right;">
+            <div style="display: flex;">
+                <i onclick="window.location.href = 'https://www.youtube.com/@sfmg/live'" id="upload"
+                    class="fa fa-upload" aria-hidden="true" style="font-size: 30px; margin-top: 17px; width: 60px;"></i>
+                <a href="/edit"><img src="" class="edit" id="edit" style="height: 35px; width: 35px;"></a>
+            </div>
+        </li>
+    </ul>
+    <center id="main">
+
+    </center>
+    <script>
+        if (!document.URL.includes('id1')) {
+            document.getElementById('main').innerHTML = `<div style="display: grid; grid-template-columns: repeat(2, 1fr);">
+                <div>
+                <input placeholder="Search" id="search1" style="margin-top: 10px; width: 90%; height: 50px;">
+                <button style="color: #FFF; height: 37px; width: 100px; box-sizing: border-box; display: inline-block; border-radius: 0.25rem; border: solid #FFF 1px; background-color: #202020;"
+                    onclick="search1()" style="margin-top: 20px;">Search</button>
+                    <hr>
+                    <div id="results1"></div>
+            </div>
+            <div>
+                <input placeholder="Search" id="search2" style="margin-top: 10px; width: 90%; height: 50px;">
+                <button style="color: #FFF; height: 37px; width: 100px; box-sizing: border-box; display: inline-block; border-radius: 0.25rem; border: solid #FFF 1px; background-color: #202020;"
+                    onclick="search2()" style="margin-top: 20px;">Search</button>
+                    <hr>
+                    <div id="results2"></div>
+            </div>
+            </div>
+            <br>
+            <hr>
+            <br>
+            <center>
+                <button onclick="compare()" style="font-size: 3vw;">Compare!</button>
+            </center>`
+        } else {
+            document.getElementById('main').innerHTML = `<div style="display: grid; grid-template-columns: repeat(2, 1fr);">
+            <div style="width: 90%;">
+            <img id="pfp1" style="border-radius: 50%; width: 10vw; height: 10vw; margin-top: 10px;" src="">
+            <h1 id="name1" style="font-size: 2vw; margin-top: 0.5vw;">Name</h1>
+            <h1 id="odometer1" style="font-size: 5vw; margin-top: -0.5vw;" class="odometer">0</h1>
+            <div id="chart1" style="height: 15vw; width: 100%; color: #000000; border: solid 0.3vw #FFF; margin: 1vw;"></div>
+            </div>
+            <div style="width: 90%;">
+            <img id="pfp2" style="border-radius: 50%; width: 10vw; height: 10vw; margin-top: 10px;" src="">
+            <h1 id="name2" style="font-size: 2vw; margin-top: 0.5vw;">Name</h1>
+            <h1 id="odometer2" style="font-size: 5vw; margin-top: -0.5vw;" class="odometer">0</h1>
+            <div id="chart2" style="height: 15vw; width: 100%; color: #000000; border: solid 0.3vw #FFF; margin: 1vw;"></div>
+            </div></div>
+            <br>
+            <div>
+            <h2>Difference</h2>
+            <h1 id="difference" style="font-size: 5vw; margin-top: -0.5vw;" class="odometer">0</h1>
+            <div id="chart3" style="height: 15vw; width: 90%; color: #000000; border: solid 0.3vw #FFF; margin: 1vw;"></div>
+            </div>
+            `
+            let chart1 = new Highcharts.chart({
+                chart: {
+                    renderTo: 'chart1',
+                    type: 'areaspline',
+                    zoomType: 'x',
+                    backgroundColor: 'transparent',
+                    plotBorderColor: 'transparent'
+                },
+                title: {
+                    text: ' '
+                },
+                credits: {
+                    enabled: false,
+                }, xAxis: {
+                    type: 'datetime',
+                    visible: false
+                },
+                yAxis: {
+                    visible: false,
+                },
+                plotOptions: {
+                    series: {
+                        threshold: null,
+                        fillOpacity: 0.25
+                    },
+                    area: {
+                        fillOpacity: 0.25
+                    }
+                },
+                series: [{
+                    showInLegend: false,
+                    name: 'Subscribers',
+                    marker: { enabled: false },
+                    color: '#FFF',
+                    lineColor: '#FFF',
+                    lineWidth: 2
+                }]
+            });
+            let chart2 = new Highcharts.chart({
+                chart: {
+                    renderTo: 'chart2',
+                    type: 'areaspline',
+                    zoomType: 'x',
+                    backgroundColor: 'transparent',
+                    plotBorderColor: 'transparent'
+                },
+                title: {
+                    text: ' '
+                },
+                credits: {
+                    enabled: false,
+                }, xAxis: {
+                    type: 'datetime',
+                    visible: false
+                },
+                yAxis: {
+                    visible: false,
+                },
+                plotOptions: {
+                    series: {
+                        threshold: null,
+                        fillOpacity: 0.25
+                    },
+                    area: {
+                        fillOpacity: 0.25
+                    }
+                },
+                series: [{
+                    showInLegend: false,
+                    name: 'Subscribers',
+                    marker: { enabled: false },
+                    color: '#FFF',
+                    lineColor: '#FFF',
+                    lineWidth: 2
+                }]
+            });
+            let chart3 = new Highcharts.chart({
+                chart: {
+                    renderTo: 'chart3',
+                    type: 'areaspline',
+                    zoomType: 'x',
+                    backgroundColor: 'transparent',
+                    plotBorderColor: 'transparent'
+                },
+                title: {
+                    text: ' '
+                },
+                credits: {
+                    enabled: false,
+                }, xAxis: {
+                    type: 'datetime',
+                    visible: false
+                },
+                yAxis: {
+                    visible: false,
+                },
+                plotOptions: {
+                    series: {
+                        threshold: null,
+                        fillOpacity: 0.25
+                    },
+                    area: {
+                        fillOpacity: 0.25
+                    }
+                },
+                series: [{
+                    showInLegend: false,
+                    name: 'Difference',
+                    marker: { enabled: false },
+                    color: '#FFF',
+                    lineColor: '#FFF',
+                    lineWidth: 2
+                }]
+            });
+            function update() {
+                fetch('/user2/' + document.URL.split('id1=')[1].split('&id2=')[0])
+                    .then(response => response.json())
+                    .then(data1 => {
+                        document.getElementById('pfp1').src = data1.image
+                        document.getElementById('name1').innerHTML = data1.name
+                        document.getElementById('odometer1').innerHTML = data1.subs
+                        if (chart1.series[0].points.length == 1500) chart1.series[0].data[0].remove();
+                        chart1.series[0].addPoint([Date.now(), Math.floor(data1.subs)])
+                        fetch('/user2/' + document.URL.split('id1=')[1].split('&id2=')[1])
+                            .then(response => response.json())
+                            .then(data2 => {
+                                document.getElementById('pfp2').src = data2.image
+                                document.getElementById('name2').innerHTML = data2.name
+                                document.getElementById('odometer2').innerHTML = data2.subs
+                                document.getElementById('difference').innerHTML = Math.floor(data1.subs - data2.subs)
+                                if (chart2.series[0].points.length == 1500) chart2.series[0].data[0].remove();
+                                chart2.series[0].addPoint([Date.now(), Math.floor(data2.subs)])
+                            })
+                    })
+            }
+            update()
+            setInterval(update, 4000)
+        }
+        let ids = ["", ""]
+        function search1() {
+            document.getElementById('results1').innerHTML = ''
+            fetch('/search', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    search: document.getElementById('search1').value
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(user => {
+                        document.getElementById('results1').innerHTML += `
+                        <div style="display: flex; margin-top: 10px;" id="u1_${user.cid}">
+                            <img src="${user.image}" style="height: 100px; width: 100px;">
+                            <div style="margin-left: 10px; text-align: left;">
+                                <h3 style="margin-top:-5px;">${user.name}</h3>
+                                <p style="margin-top:-5px;">${user.subs.toLocaleString()} subscribers</p>
+                                <button style="margin-top:-5px;" onclick="select1('${user.cid}')">Select</button>
+                            </div>
+                        </div>
+                        `
+                    })
+                })
+        }
+
+        function search2() {
+            document.getElementById('results2').innerHTML = ''
+            fetch('/search', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    search: document.getElementById('search2').value
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(user => {
+                        document.getElementById('results2').innerHTML += `
+                        <div style="display: flex; margin-top: 10px;" id="u2_${user.cid}">
+                            <img src="${user.image}" style="height: 100px; width: 100px;">
+                            <div style="margin-left: 10px; text-align: left;">
+                                <h3 style="margin-top:-5px;">${user.name}</h3>
+                                <p style="margin-top:-5px;">${user.subs.toLocaleString()} subscribers</p>
+                                <button style="margin-top:-5px;" onclick="select2('${user.cid}')">Select</button>
+                            </div>
+                        </div>
+                        `
+                    })
+                })
+        }
+
+        function select1(id) {
+            if (ids[0] != "") {
+                document.getElementById("u1_" + ids[0]).style.border = 'none'
+            }
+            ids[0] = id
+            document.getElementById("u1_" + id).style.border = 'solid #FFF 3px'
+        }
+
+        function select2(id) {
+            if (ids[1] != "") {
+                document.getElementById("u2_" + ids[1]).style.border = 'none'
+            }
+            ids[1] = id
+            document.getElementById("u2_" + id).style.border = 'solid #FFF 3px'
+        }
+
+        function compare() {
+            if (ids[0] == "" || ids[1] == "") {
+                alert('Please select two channels to compare.')
+            } else {
+                window.location.href = '/compare?id1=' + ids[0] + '&id2=' + ids[1]
+            }
+        }
+
+        if (localStorage.getItem('token')) {
+        fetch('/me', {
+            headers: {
+                'Authorization': localStorage.getItem('token')
+            }
+        }).then(response => response.json()).then(data => {
+            if (data.success) {
+                document.getElementById('edit').src = data.user.image
+            }
+        })
+    }
+    function search() {
+        window.location.href = "/search?term=" + document.getElementById('search').value
+    }
+    </script>
+</body>

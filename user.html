@@ -1,0 +1,1604 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://fysc.mgcounts.com/bootstrap.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <meta charset="utf-8">
+    <meta property="twitter:title" content="SFMGTube">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://fysc.mgcounts.com">
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://fysc.mgcounts.com">
+    <meta property="og:description" content="SFMGTube">
+    <meta property="twitter:description" content="SFMGTube">
+    <link rel="stylesheet" href="https://fysc.mgcounts.com/odometer.css">
+    <script src="https://fysc.mgcounts.com/odometer.js"></script>
+    <script src="https://fysc.mgcounts.com/highstock.js"></script>
+    <title>SFMGTube</title>
+    <style>
+        body {
+            background-color: #202020;
+            word-wrap: break-word;
+        }
+
+        * {
+            word-wrap: break-word;
+            overflow-x: hidden;
+        }
+
+        #image,
+        #name,
+        #stats,
+        #badges,
+        #thing {
+            overflow-x: visible;
+        }
+
+        #edit {
+            border-radius: 50%;
+        }
+
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #2a2a2a;
+        }
+
+        li {
+            float: left;
+        }
+
+        li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        li a:hover:not(.active) {
+            background-color: #111;
+        }
+
+        #bell:hover,
+        #upload:hover {
+            cursor: pointer;
+        }
+
+        #dropdown {
+            transition: 500ms opacity, 500ms height;
+        }
+
+        h3 {
+            text-overflow: clip;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        #search {
+            background-color: #202020;
+            width: 150%;
+            color: #FFF;
+        }
+
+        #banner {
+            width: 100%;
+            height: 175px;
+            background-image: URL('');
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        #stats {
+            width: 80%;
+            display: flex;
+            text-align: left;
+            margin-top: 20px;
+        }
+
+        .odometer {
+            overflow-x: hidden;
+            overflow-y: hidden;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body class="body">
+    <center>
+        <ul>
+            <li><a href="/" style="font-size: 20px; font-weight: 600;">SFMGTube</a></li>
+            <li><input class="form-control mr-sm-2" id="search" placeholder="Search" style="margin-top: 10px;"></li>
+            <li style="margin-top: 10px; margin-left: 0px;"><button
+                    style="color: #FFF; height: 37px; width: 100px; box-sizing: border-box; display: inline-block; border-radius: 0.25rem; border: solid #FFF 1px; background-color: #202020;"
+                    onclick="search()" style="margin-top: 20px;">Search</button></li>
+            <li style="float: right;">
+                <div style="display: flex;">
+                    <i onclick="window.location.href = 'https://www.youtube.com/@sfmg/live'" id="upload"
+                        class="fa fa-upload" aria-hidden="true"
+                        style="font-size: 30px; margin-top: 17px; width: 60px;"></i>
+                    <a href="/edit"><img src="" class="edit" id="edit" style="height: 35px; width: 35px;"></a>
+                </div>
+            </li>
+        </ul>
+        <div id="banner"></div>
+        <div style="margin-top: 5px; display: grid; grid-template-columns: repeat(6, 1fr); width: 90%;">
+            <a onclick="changeTab('videos')"><button id="button1"
+                    style="text-align: center; font-weight: bolder; width: 100%; font-size: 2vw; border: none; border-radius: 1vw; color: #FFF; background-color: #2a2a2a;">Videos</button></a>
+            <a onclick="changeTab('streams')"><button id="button2"
+                    style="text-align: center; font-weight: bolder; width: 100%; font-size: 2vw; border: none; border-radius: 1vw; color: #FFF; background-color: #2a2a2a;">Streams</button></a>
+            <a onclick="changeTab('shorts')"><button id="button3"
+                    style="text-align: center; font-weight: bolder; width: 100%; font-size: 2vw; border: none; border-radius: 1vw; color: #FFF; background-color: #2a2a2a;">Shorts</button></a>
+            <a onclick="changeTab('songs')"><button id="button10"
+                    style="text-align: center; font-weight: bolder; width: 100%; font-size: 2vw; border: none; border-radius: 1vw; color: #FFF; background-color: #2a2a2a;">Songs</button></a>
+            <a onclick="changeTab('podcasts')"><button id="button4"
+                    style="text-align: center; font-weight: bolder; width: 100%; font-size: 2vw; border: none; border-radius: 1vw; color: #FFF; background-color: #2a2a2a;">Podcasts</button></a>
+            <a onclick="changeTab('stories')"><button id="button5"
+                    style="text-align: center; font-weight: bolder; width: 100%; font-size: 2vw; border: none; border-radius: 1vw; color: #FFF; background-color: #2a2a2a;">Stories</button></a>
+            <a onclick="changeTab('comments')"><button id="button6"
+                    style="text-align: center; font-weight: bolder; width: 100%; font-size: 2vw; border: none; border-radius: 1vw; color: #FFF; background-color: #2a2a2a;">Comments</button></a>
+            <a onclick="changeTab('posts')"><button id="button7"
+                    style="text-align: center; font-weight: bolder; width: 100%; font-size: 2vw; border: none; border-radius: 1vw; color: #FFF; background-color: #2a2a2a;">Posts</button></a>
+            <a onclick="changeTab('playlists')"><button id="button8"
+                    style="text-align: center; font-weight: bolder; width: 100%; font-size: 2vw; border: none; border-radius: 1vw; color: #FFF; background-color: #2a2a2a;">Playlists</button></a>
+            <a onclick="changeTab('graphs')"><button id="button9"
+                    style="text-align: center; font-weight: bolder; width: 100%; font-size: 2vw; border: none; border-radius: 1vw; color: #FFF; background-color: #2a2a2a;">Graphs</button></a>
+            <a onclick="changeTab('stats')"><button id="button10"
+                    style="text-align: center; font-weight: bolder; width: 100%; font-size: 2vw; border: none; border-radius: 1vw; color: #FFF; background-color: #2a2a2a;">Live
+                    Stats</button></a>
+            <a onclick="changeTab('table')"><button id="button11"
+                    style="text-align: center; font-weight: bolder; width: 100%; font-size: 2vw; border: none; border-radius: 1vw; color: #FFF; background-color: #2a2a2a;">Stats
+                    Table</button></a>
+        </div>
+        <hr style="background-color: #FFF;">
+        <div id="stats" style="margin-top: 3vw;">
+            <img src="" style="margin-top: -1vw; height: 6vw; width: 6vw; border-radius: 50%; overflow-x: revert;"
+                id="image">
+            <div style="margin-left: 1vw;" id="thing">
+                <div id="badges">
+                    <h1 style="display: inline-block; font-weight: 900; font-size: 3vw; margin-top: -1vw;" id="name">
+                        Loading...</h1>
+                    <img src="/verified.png" style="vertical-align: top; height: 30px; width: 30px; visibility: hidden"
+                        id="verified">
+                </div>
+                <h1 id="subs" style="font-weight: 300; font-size: 2vw; color: #818181; margin-top: -0.5vw;">
+                    0 subscribers
+                </h1>
+            </div>
+        </div>
+        <hr style="background-color: #FFF;">
+        <br>
+        <div id="videosTab" style="column-gap: 1vw; width: 95%; display: grid; grid-template-columns: repeat(2, 1fr);">
+            <button onclick="sortTab('views', 'videos')">Sort By: Views</button>
+            <button onclick="sortTab('likes', 'videos')">Sort By: Likes</button>
+            <button onclick="sortTab('dislikes', 'videos')">Sort By: Dislikes</button>
+            <button onclick="sortTab('comments', 'videos')">Sort By: Comments</button>
+            <button onclick="sortTab('date', 'videos')">Sort By: Date</button>
+            <button onclick="sortTab('length', 'videos')">Sort By Length</button>
+            <button onclick="sortTab('avg', 'videos')">Sort By Avg Watchtime</button>
+            <button onclick="sortTab('algorithm', 'videos')">Sort By In Algorithm</button>
+        </div>
+        <div id="streamsTab"
+            style="column-gap: 1vw; width: 95%; display: grid; grid-template-columns: repeat(2, 1fr); display: none;">
+            <button onclick="sortTab('views', 'streams')">Sort By: Views</button>
+            <button onclick="sortTab('likes', 'streams')">Sort By: Likes</button>
+            <button onclick="sortTab('dislikes', 'streams')">Sort By: Dislikes</button>
+            <button onclick="sortTab('comments', 'streams')">Sort By: Comments</button>
+            <button onclick="sortTab('date', 'streams')">Sort By: Date</button>
+            <button onclick="sortTab('length', 'streams')">Sort By Length</button>
+            <button onclick="sortTab('avg', 'streams')">Sort By Avg Watchtime</button>
+            <button onclick="sortTab('algorithm', 'streams')">Sort By In Algorithm</button>
+        </div>
+        <div id="shortsTab"
+            style="column-gap: 1vw; width: 95%; display: grid; grid-template-columns: repeat(2, 1fr); display: none;">
+            <button onclick="sortTab('views', 'shorts')">Sort By: Views</button>
+            <button onclick="sortTab('likes', 'shorts')">Sort By: Likes</button>
+            <button onclick="sortTab('dislikes', 'shorts')">Sort By: Dislikes</button>
+            <button onclick="sortTab('comments', 'shorts')">Sort By: Comments</button>
+            <button onclick="sortTab('date', 'shorts')">Sort By: Date</button>
+            <button onclick="sortTab('length', 'shorts')">Sort By Length</button>
+            <button onclick="sortTab('avg', 'shorts')">Sort By Avg Watchtime</button>
+            <button onclick="sortTab('algorithm', 'shorts')">Sort By In Algorithm</button>
+        </div>
+        <div id="songsTab"
+            style="column-gap: 1vw; width: 95%; display: grid; grid-template-columns: repeat(2, 1fr); display: none;">
+            <button onclick="sortTab('views', 'songs')">Sort By: Views</button>
+            <button onclick="sortTab('likes', 'songs')">Sort By: Likes</button>
+            <button onclick="sortTab('dislikes', 'songs')">Sort By: Dislikes</button>
+            <button onclick="sortTab('comments', 'songs')">Sort By: Comments</button>
+            <button onclick="sortTab('date', 'songs')">Sort By: Date</button>
+            <button onclick="sortTab('length', 'songs')">Sort By Length</button>
+            <button onclick="sortTab('avg', 'songs')">Sort By Avg Watchtime</button>
+            <button onclick="sortTab('algorithm', 'songs')">Sort By In Algorithm</button>
+        </div>
+        <div id="podcastsTab"
+            style="column-gap: 1vw; width: 95%; display: grid; grid-template-columns: repeat(2, 1fr); display: none;">
+            <button onclick="sortTab('views', 'podcasts')">Sort By: Views</button>
+            <button onclick="sortTab('likes', 'podcasts')">Sort By: Likes</button>
+            <button onclick="sortTab('dislikes', 'podcasts')">Sort By: Dislikes</button>
+            <button onclick="sortTab('comments', 'podcasts')">Sort By: Comments</button>
+            <button onclick="sortTab('date', 'podcasts')">Sort By: Date</button>
+            <button onclick="sortTab('length', 'podcasts')">Sort By Length</button>
+            <button onclick="sortTab('avg', 'podcasts')">Sort By Avg Watchtime</button>
+            <button onclick="sortTab('algorithm', 'podcasts')">Sort By In Algorithm</button>
+        </div>
+        <div id="storiesTab"
+            style="column-gap: 1vw; width: 95%; display: grid; grid-template-columns: repeat(2, 1fr); display: none;">
+            <button onclick="sortTab('views', 'stories')">Sort By: Views</button>
+            <button onclick="sortTab('likes', 'stories')">Sort By: Likes</button>
+            <button onclick="sortTab('comments', 'stories')">Sort By: Comments</button>
+            <button onclick="sortTab('date', 'stories')">Sort By: Date</button>
+        </div>
+        <div id="commentsTab"
+            style="column-gap: 1vw; width: 95%; display: none; grid-template-columns: repeat(3, 1fr);">
+            <button onclick="sortTab('likes', 'comments')">Sort By: Likes</button>
+            <button onclick="sortTab('replies', 'comments')">Sort By: Replies</button>
+            <button onclick="sortTab('date', 'comments')">Sort By: Date</button>
+        </div>
+        <div id="postsTab" style="column-gap: 1vw; width: 95%; display: none; grid-template-columns: repeat(3, 1fr);">
+            <button onclick="sortTab('likes', 'posts')">Sort By: Likes</button>
+            <button onclick="sortTab('comments', 'posts')">Sort By: Comments</button>
+            <button onclick="sortTab('date', 'posts')">Sort By: Date</button>
+        </div>
+        <div id="playlistsTab"
+            style="column-gap: 1vw; width: 95%; display: none; grid-template-columns: repeat(3, 1fr);">
+            <button onclick="sortTab('views', 'streams')">Sort By: Views</button>
+            <button onclick="sortTab('videos', 'streams')">Sort By: Videos</button>
+            <button onclick="sortTab('date', 'streams')">Sort By: Date</button>
+        </div>
+        <style>
+            .chart {
+                height: 10vw;
+                width: 100%;
+            }
+
+            .c {
+                width: 30vw;
+            }
+        </style>
+        <div id="graphsTab" style="column-gap: 1vw; width: 95%; display: none; grid-template-columns: repeat(3, 1fr);">
+            <div style="border: solid 1px #FFF;" class="c">
+                <h6>Subscribers</h6>
+                <div id="chart1" class="chart" style="color: #000000;"></div>
+            </div>
+            <div style="border: solid 1px #FFF;" class="c">
+                <h6>Views</h6>
+                <div id="chart2" class="chart" style="color: #000000;"></div>
+            </div>
+            <div style="border: solid 1px #FFF;" class="c">
+                <h6>Likes</h6>
+                <div id="chart3" class="chart" style="color: #000000;"></div>
+            </div>
+            <div style="border: solid 1px #FFF;" class="c">
+                <h6>Dislikes</h6>
+                <div id="chart4" class="chart" style="color: #000000;"></div>
+            </div>
+            <div style="border: solid 1px #FFF;" class="c">
+                <h6>Comments (Received)</h6>
+                <div id="chart5" class="chart" style="color: #000000;"></div>
+            </div>
+            <div style="border: solid 1px #FFF;" class="c">
+                <h6>Videos</h6>
+                <div id="chart6" class="chart" style="color: #000000;"></div>
+            </div>
+            <div style="border: solid 1px #FFF;" class="c">
+                <h6>Commands</h6>
+                <div id="chart7" class="chart" style="color: #000000;"></div>
+            </div>
+            <div style="border: solid 1px #FFF;" class="c">
+                <h6>Streams</h6>
+                <div id="chart8" class="chart" style="color: #000000;"></div>
+            </div>
+            <div style="border: solid 1px #FFF;" class="c">
+                <h6>Shorts</h6>
+                <div id="chart9" class="chart" style="color: #000000;"></div>
+            </div>
+            <div style="border: solid 1px #FFF;" class="c">
+                <h6>Songs</h6>
+                <div id="chart10" class="chart" style="color: #000000;"></div>
+            </div>
+            <div style="border: solid 1px #FFF;" class="c">
+                <h6>Comments (Given)</h6>
+                <div id="chart11" class="chart" style="color: #000000;"></div>
+            </div>
+            <div style="border: solid 1px #FFF;" class="c">
+                <h6>Playlists</h6>
+                <div id="chart12" class="chart" style="color: #000000;"></div>
+            </div>
+            <div style="border: solid 1px #FFF;" class="c">
+                <h6>Posts</h6>
+                <div id="chart13" class="chart" style="color: #000000;"></div>
+            </div>
+            <div style="border: solid 1px #FFF;" class="c">
+                <h6>Stories</h6>
+                <div id="chart14" class="chart" style="color: #000000;"></div>
+            </div>
+            <div style="border: solid 1px #FFF;" class="c">
+                <h6>Podcasts</h6>
+                <div id="chart15" class="chart" style="color: #000000;"></div>
+            </div>
+        </div>
+        <div id="statsTable"
+            style="column-gap: 30px; margin-top: 20px; width: 95%; display: none; grid-template-columns: repeat(1, 1fr);">
+            <div class="table" style="border: solid 1px #FFF; overflow-x: scroll;">
+                <table style="width: 100%;">
+                    <thead>
+                        <tr>
+                            <th style="border: solid 1px #FFF; background-color: #3a3a3a;">Date</th>
+                            <th style="border: solid 1px #FFF;">Subscribers</th>
+                            <th style="border: solid 1px #FFF; background-color: #3a3a3a;">Subscriber Gain</th>
+                            <th style="border: solid 1px #FFF;">Views</th>
+                            <th style="border: solid 1px #FFF; background-color: #3a3a3a;">View Gain</th>
+                            <th style="border: solid 1px #FFF;">Likes</th>
+                            <th style="border: solid 1px #FFF; background-color: #3a3a3a;">Like Gain</th>
+                            <th style="border: solid 1px #FFF;">Dislikes</th>
+                            <th style="border: solid 1px #FFF; background-color: #3a3a3a;">Dislike Gain</th>
+                            <th style="border: solid 1px #FFF;">Comments (Received)</th>
+                            <th style="border: solid 1px #FFF; background-color: #3a3a3a;">Comment Gain</th>
+                            <th style="border: solid 1px #FFF;">Videos</th>
+                            <th style="border: solid 1px #FFF; background-color: #3a3a3a;">Video Gain</th>
+                            <th style="border: solid 1px #FFF;">Commands</th>
+                            <th style="border: solid 1px #FFF; background-color: #3a3a3a;">Command Gain</th>
+                            <th style="border: solid 1px #FFF;">Streams</th>
+                            <th style="border: solid 1px #FFF; background-color: #3a3a3a;">Stream Gain</th>
+                            <th style="border: solid 1px #FFF;">Shorts</th>
+                            <th style="border: solid 1px #FFF; background-color: #3a3a3a;">Short Gain</th>
+                            <th style="border: solid 1px #FFF;">Songs</th>
+                            <th style="border: solid 1px #FFF; background-color: #3a3a3a;">Song Gain</th>
+                            <th style="border: solid 1px #FFF;">Comments (Given)</th>
+                            <th style="border: solid 1px #FFF; background-color: #3a3a3a;">Comment Gain</th>
+                            <th style="border: solid 1px #FFF;">Playlists</th>
+                            <th style="border: solid 1px #FFF; background-color: #3a3a3a;">Playlist Gain</th>
+                            <th style="border: solid 1px #FFF;">Posts</th>
+                            <th style="border: solid 1px #FFF; background-color: #3a3a3a;">Post Gain</th>
+                            <th style="border: solid 1px #FFF;">Stories</th>
+                            <th style="border: solid 1px #FFF; background-color: #3a3a3a;">Story Gain</th>
+                            <th style="border: solid 1px #FFF;">Podcasts</th>
+                            <th style="border: solid 1px #FFF; background-color: #3a3a3a;">Podcast Gain</th>
+                        </tr>
+                    </thead>
+                    <tbody style="border-style: none;" class="counters"></tbody>
+                </table>
+            </div>
+        </div>
+    </center>
+    </div>
+    <br>
+    <br>
+</body>
+<script>
+    var params = new URLSearchParams(document.location.search.substring(1));
+    var id = params.get("id");
+    var name = ""
+    let chartData1 = [];
+    let chartData2 = [];
+    let chartData3 = [];
+    let chartData4 = [];
+    let chartData5 = [];
+    let chartData6 = [];
+    let chartData7 = [];
+    let chartData8 = [];
+    let chartData9 = [];
+    let chartData10 = [];
+    let chartData11 = [];
+    let chartData12 = [];
+    let chartData13 = [];
+    let chartData14 = [];
+    let chartData15 = [];
+    let uploads = []
+    let comments = []
+    let posts = []
+    let playlists = []
+    let videos = []
+    let streams = []
+    let shorts = []
+    let songs = []
+    let stories = []
+    let podcasts = []
+    let sorts = {
+        "videos": "date",
+        "streams": "date",
+        "shorts": "date",
+        "songs": "date",
+        "stories": "date",
+        "podcasts": "date",
+        "comments": "date",
+        "posts": "date",
+        "playlists": "date"
+    }
+    function sortTab(type, type2) {
+        console.log(type, type2, eval(type2))
+        if (type == sorts[type2]) {
+            eval(type2).reverse()
+        } else {
+            if (type == "views") {
+                eval(type2).sort((a, b) => (a.views > b.views) ? -1 : 1)
+            } else if (type == "likes") {
+                eval(type2).sort((a, b) => (a.likes > b.likes) ? -1 : 1)
+            } else if (type == "dislikes") {
+                eval(type2).sort((a, b) => (a.dislikes > b.dislikes) ? -1 : 1)
+            } else if (type == "comments") {
+                eval(type2).sort((a, b) => (a.comments > b.comments) ? -1 : 1)
+            } else if (type == "date") {
+                eval(type2).sort((a, b) => (a.posted > b.posted) ? -1 : 1)
+            } else if (type == "length") {
+                eval(type2).sort((a, b) => (a.duration > b.duration) ? -1 : 1)
+            } else if (type == "avg") {
+                eval(type2).sort((a, b) => (a.algorithm.averageWatchTime > b.algorithm.averageWatchTime) ? -1 : 1)
+            } else if (type == "algorithm") {
+                eval(type2).sort((a, b) => (a.inAlgorithm > b.inAlgorithm) ? -1 : 1)
+            } else if (type == "replies") {
+                eval(type2).sort((a, b) => (a.replies > b.replies) ? -1 : 1)
+            } else if (type == 'videos') {
+                eval(type2).sort((a, b) => (a.videos > b.videos) ? -1 : 1)
+            }
+        }
+        sorts[type2] = type
+        if ((type2 == "videos" || type2 == "streams" || type2 == "shorts" || type2 == "songs" || type2 == "podcasts")) {
+            document.getElementById(type2 + 'Tab').innerHTML = `<button onclick="sortTab('views', '${type2}')">Sort By: Views</button>
+            <button onclick="sortTab('likes', '${type2}')">Sort By: Likes</button>
+            <button onclick="sortTab('dislikes', '${type2}')">Sort By: Dislikes</button>
+            <button onclick="sortTab('comments', '${type2}')">Sort By: Comments</button>
+            <button onclick="sortTab('date', '${type2}')">Sort By: Date</button>
+                <button onclick="sortTab('length', '${type2}')">Sort By Length</button>
+            <button onclick="sortTab('avg', '${type2}')">Sort By Avg Watchtime</button>
+            <button onclick="sortTab('algorithm', '${type2}')">Sort By In Algorithm</button>`
+        } else if (type2 == 'comments') {
+            document.getElementById(type2 + 'Tab').innerHTML = `<button onclick="sortTab('likes', '${type2}')">Sort By: Likes</button>
+            <button onclick="sortTab('replies', '${type2}')">Sort By: Replies</button>
+            <button onclick="sortTab('date', '${type2}')">Sort By: Date</button>`
+        } else if (type2 == 'posts') {
+            document.getElementById(type2 + 'Tab').innerHTML = `<button onclick="sortTab('likes', '${type2}')">Sort By: Likes</button>
+            <button onclick="sortTab('comments', '${type2}')">Sort By: Comments</button>
+            <button onclick="sortTab('date', '${type2}')">Sort By: Date</button>`
+        } else if (type2 == 'playlists') {
+            document.getElementById(type2 + 'Tab').innerHTML = `<button onclick="sortTab('videos', '${type2}')">Sort By: Videos</button>
+            <button onclick="sortTab('views', '${type2}')">Sort By: Views</button>
+            <button onclick="sortTab('date', '${type2}')">Sort By: date</button>`
+        } else if (type2 == 'stories') {
+            document.getElementById(type2 + 'Tab').innerHTML = `<button onclick="sortTab('views', '${type2}')">Sort By: Views</button>
+            <button onclick="sortTab('likes', '${type2}')">Sort By: Likes</button>
+            <button onclick="sortTab('comments', '${type2}')">Sort By: Comments</button>
+            <button onclick="sortTab('date', '${type2}')">Sort By: Date</button>`
+        }
+        for (let q = 0; q < eval(type2).length; q++) {
+            let card = document.createElement('div')
+            if (!eval(type2)[q].inAlgorithm) {
+                eval(type2)[q].inAlgorithm = false
+            }
+            if (!eval(type2)[q].algorithm) {
+                eval(type2)[q].algorithm = {
+                    averageWatchTime: 0
+                }
+            }
+            if (!eval(type2)[q].likes) {
+                eval(type2)[q].likes = 0
+            }
+            if (!eval(type2)[q].dislikes) {
+                eval(type2)[q].dislikes = 0
+            }
+            if (!eval(type2)[q].comments) {
+                eval(type2)[q].comments = 0
+            }
+            card.innerHTML = `
+                    <div style="border: 0.5vw #FFF solid;">
+                    <h1 style="font-weight: 900; font-size: 3vw; ">${eval(type2)[q].title.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</h1>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); font-size: 1vw;">
+                    <h4 style="font-size: 1.3vw;">${Math.floor(eval(type2)[q].views).toLocaleString()} views</h4>
+                    <h4 style="font-size: 1.3vw;">${Math.floor(eval(type2)[q].likes).toLocaleString()} likes</h4>
+                    <h4 style="font-size: 1.3vw;">${Math.floor(eval(type2)[q].dislikes).toLocaleString()} dislikes</h4>
+                    <h4 style="font-size: 1.3vw;">${Math.floor(eval(type2)[q].comments).toLocaleString()} comments</h4>
+                    <h4 style="font-size: 1.3vw;">Uploaded: ~${timeSince(eval(type2)[q].posted)} ago</h4>
+                    <h4 style="font-size: 1.3vw;">Length: ${eval(type2)[q].duration}</h4>
+                    <h4 style="font-size: 1.3vw;">Watchtime: ${eval(type2)[q].algorithm.averageWatchTime}%</h4>
+                    <h4 style="font-size: 1.3vw;">Algorithm: ${eval(type2)[q].inAlgorithm}</h4>
+                    </div>
+                    </div>`
+            document.getElementById(type2 + 'Tab').appendChild(card)
+        }
+    }
+    let commentLoaded = [0, 4]
+    let postLoaded = [0, 4]
+    let playlistLoaded = [0, 4]
+    let videoLoaded = [0, 4]
+    let streamLoaded = [0, 4]
+    let shortLoaded = [0, 4]
+    let songLoaded = [0, 4]
+    let storyLoaded = [0, 4]
+    let podcastLoaded = [0, 4]
+    function load() {
+        fetch('https://fysc.mgcounts.com/user2/' + id + '')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('name').innerHTML = data.name.replace(/</g, "&lt;").replace(/>/g, "&gt;")
+                name = data.name
+                document.getElementById('subs').innerHTML = Math.floor(data.subs).toLocaleString() + " subscribers"
+                if (data.verified == true) {
+                    document.getElementById('verified').style.visibility = "visible"
+                }
+                document.getElementById('image').src = data.image
+                document.getElementById('banner').style.background = "url(https://www.banner.yt/" + id + ")"
+            })
+        fetch('/loadMore/' + id + "/all/date/0/4")
+            .then(res => res.json())
+            .then(data => {
+                commentLoaded[1] = data.commentList.length - 1
+                postLoaded[1] = data.postList.length - 1
+                playlistLoaded[1] = data.playlistList.length - 1
+                videoLoaded[1] = data.videoList.length - 1
+                streamLoaded[1] = data.streamList.length - 1
+                shortLoaded[1] = data.shortList.length - 1
+                songLoaded[1] = data.songList.length - 1
+                storyLoaded[1] = data.storyList.length - 1
+                podcastLoaded[1] = data.podcastList.length - 1
+                for (let i = 0; i < data.commentList.length; i++) {
+                    comments.push(data.commentList[i])
+                }
+                for (let i = 0; i < data.postList.length; i++) {
+                    posts.push(data.postList[i])
+                }
+                for (let i = 0; i < data.playlistList.length; i++) {
+                    playlists.push(data.playlistList[i])
+                }
+                for (let i = 0; i < data.videoList.length; i++) {
+                    data.videoList[i].type = "Video"
+                    videos.push(data.videoList[i])
+                }
+                for (let i = 0; i < data.streamList.length; i++) {
+                    data.streamList[i].type = "Stream"
+                    streams.push(data.streamList[i])
+                }
+                for (let i = 0; i < data.shortList.length; i++) {
+                    data.shortList[i].type = "Short"
+                    shorts.push(data.shortList[i])
+                }
+                for (let i = 0; i < data.songList.length; i++) {
+                    data.songList[i].type = "Song"
+                    songs.push(data.songList[i])
+                }
+                for (let i = 0; i < data.storyList.length; i++) {
+                    data.storyList[i].type = "Story"
+                    stories.push(data.storyList[i])
+                }
+                for (let i = 0; i < data.podcastList.length; i++) {
+                    data.podcastList[i].type = "Podcast"
+                    podcasts.push(data.podcastList[i])
+                }
+                uploads = uploads.sort((a, b) => b.posted - a.posted)
+                let types = ['videos', 'streams', 'shorts', 'songs', 'stories', 'podcasts']
+                for (let i = 0; i < types.length; i++) {
+                    for (let q = 0; q < eval(types[i]).length; q++) {
+                        let card = document.createElement('div')
+                        let card2 = ""
+                        let card3 = ""
+                        if (!types[i] == "stories") {
+                            card2 = `
+                    <h4 style="font-size: 1.3vw;">Length: ${eval(types[i])[q].duration}</h4>
+                    <h4 style="font-size: 1.3vw;">Watchtime: ${eval(types[i])[q].algorithm.averageWatchTime}%</h4>
+                    <h4 style="font-size: 1.3vw;">Algorithm: ${eval(types[i])[q].inAlgorithm}</h4>`
+                            card3 = `
+                    <h4 style="font-size: 1.3vw;">${Math.floor(eval(types[i])[q].dislikes).toLocaleString()} dislikes</h4>`
+                        }
+                        card.innerHTML = `
+                    <div style="border: 0.5vw #FFF solid;">
+                    <h1 style="font-weight: 900; font-size: 3vw; ">${eval(types[i])[q].title.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</h1>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); font-size: 1vw;">
+                    <h4 style="font-size: 1.3vw;">${Math.floor(eval(types[i])[q].views).toLocaleString()} views</h4>
+                    <h4 style="font-size: 1.3vw;">${Math.floor(eval(types[i])[q].likes).toLocaleString()} likes</h4>
+                    ${card3}
+                            <h4 style="font-size: 1.3vw;">${Math.floor(eval(types[i])[q].comments).toLocaleString()} comments</h4>
+                    <h4 style="font-size: 1.3vw;">Uploaded: ~${timeSince(eval(types[i])[q].posted)} ago</h4>
+                    ${card2}
+                    </div>
+                    </div>`
+                        document.getElementById(types[i].toLowerCase() + "Tab").appendChild(card)
+                    }
+                    var b = document.createElement('button')
+                    b.innerHTML = "Load More"
+                    b.class = "loadMore"
+                    b.id = types[i].toLowerCase() + "LoadMore"
+                    b.onclick = () => {
+                        loadMore(types[i].toLowerCase())
+                    }
+                    document.getElementById(types[i].toLowerCase() + "Tab").appendChild(b)
+                }
+                comments = comments.sort((a, b) => b.posted - a.posted)
+                for (let q = 0; q < comments.length; q++) {
+                    let card = document.createElement('div')
+                    card.innerHTML = `
+                    <div style="border: 0.5vw #FFF solid;">
+                    <h1 style="font-weight: 900; font-size: 3vw; ">${comments[q].title.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</h1>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); font-size: 1vw;">
+                    <h4 style="font-size: 1.3vw;">${comments[q].likes.toLocaleString()} likes</h4>
+                    <h4 style="font-size: 1.3vw;">${comments[q].replies.toLocaleString()} replies</h4>
+                    <h4 style="font-size: 1.3vw;">Posted: ~${timeSince(comments[q].posted)} ago</h4>
+                    </div>
+                    </div>`
+                    document.getElementById('commentsTab').appendChild(card)
+                }
+                var b = document.createElement('button')
+                b.innerHTML = "Load More"
+                b.class = "loadMore"
+                b.id = "commentsLoadMore"
+                b.onclick = () => {
+                    loadMore('comments')
+                }
+                document.getElementById('commentsTab').appendChild(b)
+                playlists = playlists.sort((a, b) => b.posted - a.posted)
+                posts = posts.sort((a, b) => b.posted - a.posted)
+                for (let q = 0; q < posts.length; q++) {
+                    let card = document.createElement('div')
+                    card.innerHTML = `
+                    <div style="border: 0.5vw #FFF solid;">
+                    <h1 style="font-weight: 900; font-size: 3vw; ">${name} ${posts[q].title.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</h1>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); font-size: 1vw;">
+                    <h4 style="font-size: 1.3vw;">${posts[q].likes.toLocaleString()} likes</h4>
+                    <h4 style="font-size: 1.3vw;">${posts[q].comments.toLocaleString()} comments</h4>
+                    <h4 style="font-size: 1.3vw;">Posted: ~${timeSince(posts[q].posted)} ago</h4>
+                    </div>
+                    </div>`
+                    document.getElementById('postsTab').appendChild(card)
+                }
+                var b = document.createElement('button')
+                b.innerHTML = "Load More"
+                b.class = "loadMore"
+                b.id = "postsLoadMore"
+                b.onclick = () => {
+                    loadMore('posts')
+                }
+                document.getElementById('postsTab').appendChild(b)
+                playlists = playlists.sort((a, b) => b.posted - a.posted)
+                for (let q = 0; q < playlists.length; q++) {
+                    let card = document.createElement('div')
+                    card.innerHTML = `
+                    <div style="border: 0.5vw #FFF solid;">
+                    <h1 style="font-weight: 900; font-size: 3vw; ">${playlists[q].title.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</h1>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); font-size: 1vw;">
+                    <h4 style="font-size: 1.3vw;">${Math.floor(playlists[q].views).toLocaleString()} views</h4>
+                    <h4 style="font-size: 1.3vw;">Videos: ${playlists[q].length}</h4>
+                    <h4 style="font-size: 1.3vw;">Posted: ~${timeSince(playlists[q].posted)} ago</h4>
+                    </div>
+                    </div>`
+                    document.getElementById('playlistsTab').appendChild(card)
+                }
+                var b = document.createElement('button')
+                b.innerHTML = "Load More"
+                b.class = "loadMore"
+                b.id = "playlistsLoadMore"
+                b.onclick = () => {
+                    loadMore('playlists')
+                }
+                document.getElementById('playlistsTab').appendChild(b)
+            })
+        fetch('/stats/' + id)
+            .then(res => res.json())
+            .then(data => {
+                for (let q = 0; q < data.list.length; q++) {
+                    data.list[q][0] = data.list[q][0].split('/')[0] + "/" + (parseFloat(data.list[q][0].split('/')[1]) + 1).toString() + '/' + data.list[q][0].split('/')[2].replace('at', 'at the') + " hour (CST)"
+                    let subGain = 0;
+                    let viewGain = 0;
+                    let likeGain = 0;
+                    let dislikeGain = 0;
+                    let commentCountGain = 0;
+                    let commandGain = 0;
+                    let videoGain = 0;
+                    let streamGain = 0;
+                    let shortGain = 0;
+                    let songGain = 0;
+                    let commentGain = 0;
+                    let playlistGain = 0;
+                    let postGain = 0;
+                    let storyGain = 0;
+                    let podcastGain = 0;
+                    if (data.list[q - 1]) {
+                        subGain = checkStr(Math.floor(data.list[q][1] - Math.floor(data.list[q - 1][1]))).toLocaleString()
+                        viewGain = checkStr((data.list[q][2] - data.list[q - 1][2])).toLocaleString()
+                        likeGain = checkStr((data.list[q][3] - data.list[q - 1][3])).toLocaleString()
+                        dislikeGain = checkStr((data.list[q][4] - data.list[q - 1][4])).toLocaleString()
+                        commentCountGain = checkStr((data.list[q][5] - data.list[q - 1][5])).toLocaleString()
+                        videoGain = checkStr((data.list[q][6] - data.list[q - 1][6])).toLocaleString()
+                        commandGain = checkStr((data.list[q][7] - data.list[q - 1][7])).toLocaleString()
+                        streamGain = checkStr((data.list[q][8] - data.list[q - 1][8])).toLocaleString()
+                        shortGain = checkStr((data.list[q][9] - data.list[q - 1][9])).toLocaleString()
+                        songGain = checkStr((data.list[q][10] - data.list[q - 1][10])).toLocaleString()
+                        commentGain = checkStr((data.list[q][11] - data.list[q - 1][11])).toLocaleString()
+                        playlistGain = checkStr((data.list[q][12] - data.list[q - 1][12])).toLocaleString()
+                        postGain = checkStr((data.list[q][13] - data.list[q - 1][13])).toLocaleString()
+                        storyGain = checkStr((data.list[q][14] - data.list[q - 1][14])).toLocaleString()
+                        podcastGain = checkStr((data.list[q][15] - data.list[q - 1][15])).toLocaleString()
+                    } else {
+                        subGain = "+" + Math.floor(data.list[q][1]).toLocaleString()
+                        viewGain = "+" + Math.floor(data.list[q][2]).toLocaleString()
+                        likeGain = "+" + Math.floor(data.list[q][3]).toLocaleString()
+                        dislikeGain = "+" + Math.floor(data.list[q][4]).toLocaleString()
+                        commentCountGain = "+" + Math.floor(data.list[q][5]).toLocaleString()
+                        videoGain = "+" + Math.floor(data.list[q][6]).toLocaleString()
+                        commandGain = "+" + Math.floor(data.list[q][7]).toLocaleString()
+                        streamGain = "+" + Math.floor(data.list[q][8]).toLocaleString()
+                        shortGain = "+" + Math.floor(data.list[q][9]).toLocaleString()
+                        songGain = "+" + Math.floor(data.list[q][10]).toLocaleString()
+                        commentGain = "+" + Math.floor(data.list[q][11]).toLocaleString()
+                        playlistGain = "+" + Math.floor(data.list[q][12]).toLocaleString()
+                        postGain = "+" + Math.floor(data.list[q][13]).toLocaleString()
+                        storyGain = "+" + Math.floor(data.list[q][14]).toLocaleString()
+                        podcastGain = "+" + Math.floor(data.list[q][15]).toLocaleString()
+                    }
+                    var htmlcard = `<tr>
+                    <td style="border: solid 1px #FFF; background-color: #3a3a3a;" id="date_${q}">${data.list[q][0]}</td>
+                        <td style="border: solid 1px #FFF;" id="subs_${q}">${Math.floor(data.list[q][1]).toLocaleString()}</td>
+                        <td style="border: solid 1px #FFF; background-color: #3a3a3a;" id="subgain_${q}">${subGain}</td>
+                        <td style="border: solid 1px #FFF;" id="views_${q}">${Math.floor(data.list[q][2]).toLocaleString()}</td>
+                        <td style="border: solid 1px #FFF; background-color: #3a3a3a;" id="viewgain_${q}">${viewGain}</td>
+                        <td style="border: solid 1px #FFF;" id="likes_${q}">${Math.floor(data.list[q][3]).toLocaleString()}</td>
+                        <td style="border: solid 1px #FFF; background-color: #3a3a3a;" id="likegain_${q}">${likeGain}</td>
+                        <td style="border: solid 1px #FFF;" id="dislikes_${q}">${Math.floor(data.list[q][4]).toLocaleString()}</td>
+                        <td style="border: solid 1px #FFF; background-color: #3a3a3a;" id="dislikegain_${q}">${dislikeGain}</td>
+                        <td style="border: solid 1px #FFF;" id="comments_${q}">${Math.floor(data.list[q][5]).toLocaleString()}</td>
+                        <td style="border: solid 1px #FFF; background-color: #3a3a3a;" id="commentgain_${q}">${commentCountGain}</td>
+                        <td style="border: solid 1px #FFF;" id="videos_${q}">${Math.floor(data.list[q][6]).toLocaleString()}</td>
+                        <td style="border: solid 1px #FFF; background-color: #3a3a3a;" id="videoGain_${q}">${videoGain}</td>
+                        <td style="border: solid 1px #FFF;" id="commands_${q}">${Math.floor(data.list[q][7]).toLocaleString()}</td>
+                        <td style="border: solid 1px #FFF; background-color: #3a3a3a;" id="commandgain_${q}">${commandGain}</td>
+                        <td style="border: solid 1px #FFF;" id="streams_${q}">${Math.floor(data.list[q][8]).toLocaleString()}</td>
+                        <td style="border: solid 1px #FFF; background-color: #3a3a3a;" id="streamgain_${q}">${streamGain}</td>
+                        <td style="border: solid 1px #FFF;" id="shorts_${q}">${Math.floor(data.list[q][9]).toLocaleString()}</td>
+                        <td style="border: solid 1px #FFF; background-color: #3a3a3a;" id="shortgain_${q}">${shortGain}</td>
+                        <td style="border: solid 1px #FFF;" id="songs_${q}">${Math.floor(data.list[q][10]).toLocaleString()}</td>
+                        <td style="border: solid 1px #FFF; background-color: #3a3a3a;" id="songgain_${q}">${songGain}</td>
+                        <td style="border: solid 1px #FFF;" id="comments_${q}">${Math.floor(data.list[q][11]).toLocaleString()}</td>
+                        <td style="border: solid 1px #FFF; background-color: #3a3a3a;" id="commentgain_${q}">${commentGain}</td>
+                        <td style="border: solid 1px #FFF;" id="playlists_${q}">${Math.floor(data.list[q][12]).toLocaleString()}</td>
+                        <td style="border: solid 1px #FFF; background-color: #3a3a3a;" id="playlistgain_${q}">${playlistGain}</td>
+                        <td style="border: solid 1px #FFF;" id="posts_${q}">${Math.floor(data.list[q][13]).toLocaleString()}</td>
+                        <td style="border: solid 1px #FFF; background-color: #3a3a3a;" id="postgain_${q}">${postGain}</td>
+                        <td style="border: solid 1px #FFF;" id="stories_${q}">${Math.floor(data.list[q][14]).toLocaleString()}</td>
+                        <td style="border: solid 1px #FFF; background-color: #3a3a3a;" id="storygain_${q}">${storyGain}</td>
+                        <td style="border: solid 1px #FFF;" id="podcasts_${q}">${Math.floor(data.list[q][15]).toLocaleString()}</td>
+                        <td style="border: solid 1px #FFF; background-color: #3a3a3a;" id="podcastgain_${q}">${podcastGain}</td>
+                    </tr>`;
+                    $('.counters').append(htmlcard)
+                    chartData1.push([data.list[q][0], Math.floor(data.list[q][1])])
+                    chartData2.push([data.list[q][0], Math.floor(data.list[q][2])])
+                    chartData3.push([data.list[q][0], Math.floor(data.list[q][3])])
+                    chartData4.push([data.list[q][0], Math.floor(data.list[q][4])])
+                    chartData5.push([data.list[q][0], Math.floor(data.list[q][5])])
+                    chartData6.push([data.list[q][0], Math.floor(data.list[q][6])])
+                    chartData7.push([data.list[q][0], Math.floor(data.list[q][7])])
+                    chartData8.push([data.list[q][0], Math.floor(data.list[q][8])])
+                    chartData9.push([data.list[q][0], Math.floor(data.list[q][9])])
+                    chartData10.push([data.list[q][0], Math.floor(data.list[q][10])])
+                    chartData11.push([data.list[q][0], Math.floor(data.list[q][11])])
+                    chartData12.push([data.list[q][0], Math.floor(data.list[q][12])])
+                    chartData13.push([data.list[q][0], Math.floor(data.list[q][13])])
+                    chartData14.push([data.list[q][0], Math.floor(data.list[q][14])])
+                    chartData15.push([data.list[q][0], Math.floor(data.list[q][15])])
+                }
+                function checkStr(input) {
+                    input = parseFloat(input)
+                    if (input > 0) {
+                        return "+" + Math.floor(input).toLocaleString()
+                    } else {
+                        return Math.floor(input).toLocaleString()
+                    }
+                }
+                let chart1 = new Highcharts.chart({
+                    chart: {
+                        renderTo: 'chart1',
+                        type: 'areaspline',
+                        zoomType: 'x',
+                        backgroundColor: 'transparent',
+                        plotBorderColor: 'transparent'
+                    },
+                    title: {
+                        text: ' '
+                    },
+                    credits: {
+                        enabled: false,
+                    }, xAxis: {
+                        type: 'datetime',
+                        visible: false
+                    },
+                    yAxis: {
+                        visible: false,
+                    },
+                    plotOptions: {
+                        series: {
+                            threshold: null,
+                            fillOpacity: 0.25
+                        },
+                        area: {
+                            fillOpacity: 0.25
+                        }
+                    },
+                    series: [{
+                        showInLegend: false,
+                        name: 'Subscribers',
+                        marker: { enabled: false },
+                        color: '#FFF',
+                        lineColor: '#FFF',
+                        lineWidth: 2,
+                        data: chartData1
+                    }]
+                });
+                let chart2 = new Highcharts.chart({
+                    chart: {
+                        renderTo: 'chart2',
+                        type: 'areaspline',
+                        zoomType: 'x',
+                        backgroundColor: 'transparent',
+                        plotBorderColor: 'transparent'
+                    },
+                    title: {
+                        text: ' '
+                    },
+                    credits: {
+                        enabled: false,
+                    }, xAxis: {
+                        type: 'datetime',
+                        visible: false
+                    },
+                    yAxis: {
+                        visible: false,
+                    },
+                    plotOptions: {
+                        series: {
+                            threshold: null,
+                            fillOpacity: 0.25
+                        },
+                        area: {
+                            fillOpacity: 0.25
+                        }
+                    },
+                    series: [{
+                        showInLegend: false,
+                        name: 'Views',
+                        marker: { enabled: false },
+                        color: '#FFF',
+                        lineColor: '#FFF',
+                        lineWidth: 2,
+                        data: chartData2
+                    }]
+                });
+                let chart3 = new Highcharts.chart({
+                    chart: {
+                        renderTo: 'chart3',
+                        type: 'areaspline',
+                        zoomType: 'x',
+                        backgroundColor: 'transparent',
+                        plotBorderColor: 'transparent'
+                    },
+                    title: {
+                        text: ' '
+                    },
+                    credits: {
+                        enabled: false,
+                    }, xAxis: {
+                        type: 'datetime',
+                        visible: false
+                    },
+                    yAxis: {
+                        visible: false,
+                    },
+                    plotOptions: {
+                        series: {
+                            threshold: null,
+                            fillOpacity: 0.25
+                        },
+                        area: {
+                            fillOpacity: 0.25
+                        }
+                    },
+                    series: [{
+                        showInLegend: false,
+                        name: 'Likes',
+                        marker: { enabled: false },
+                        color: '#FFF',
+                        lineColor: '#FFF',
+                        lineWidth: 2,
+                        data: chartData3
+                    }]
+                });
+                let chart4 = new Highcharts.chart({
+                    chart: {
+                        renderTo: 'chart4',
+                        type: 'areaspline',
+                        zoomType: 'x',
+                        backgroundColor: 'transparent',
+                        plotBorderColor: 'transparent'
+                    },
+                    title: {
+                        text: ' '
+                    },
+                    credits: {
+                        enabled: false,
+                    }, xAxis: {
+                        type: 'datetime',
+                        visible: false
+                    },
+                    yAxis: {
+                        visible: false,
+                    },
+                    plotOptions: {
+                        series: {
+                            threshold: null,
+                            fillOpacity: 0.25
+                        },
+                        area: {
+                            fillOpacity: 0.25
+                        }
+                    },
+                    series: [{
+                        showInLegend: false,
+                        name: 'Dislikes',
+                        marker: { enabled: false },
+                        color: '#FFF',
+                        lineColor: '#FFF',
+                        lineWidth: 2,
+                        data: chartData4
+                    }]
+                });
+                let chart5 = new Highcharts.chart({
+                    chart: {
+                        renderTo: 'chart5',
+                        type: 'areaspline',
+                        zoomType: 'x',
+                        backgroundColor: 'transparent',
+                        plotBorderColor: 'transparent'
+                    },
+                    title: {
+                        text: ' '
+                    },
+                    credits: {
+                        enabled: false,
+                    }, xAxis: {
+                        type: 'datetime',
+                        visible: false
+                    },
+                    yAxis: {
+                        visible: false,
+                    },
+                    plotOptions: {
+                        series: {
+                            threshold: null,
+                            fillOpacity: 0.25
+                        },
+                        area: {
+                            fillOpacity: 0.25
+                        }
+                    },
+                    series: [{
+                        showInLegend: false,
+                        name: 'Comments',
+                        marker: { enabled: false },
+                        color: '#FFF',
+                        lineColor: '#FFF',
+                        lineWidth: 2,
+                        data: chartData5
+                    }]
+                });
+                let chart6 = new Highcharts.chart({
+                    chart: {
+                        renderTo: 'chart6',
+                        type: 'areaspline',
+                        zoomType: 'x',
+                        backgroundColor: 'transparent',
+                        plotBorderColor: 'transparent'
+                    },
+                    title: {
+                        text: ' '
+                    },
+                    credits: {
+                        enabled: false,
+                    }, xAxis: {
+                        type: 'datetime',
+                        visible: false
+                    },
+                    yAxis: {
+                        visible: false,
+                    },
+                    plotOptions: {
+                        series: {
+                            threshold: null,
+                            fillOpacity: 0.25
+                        },
+                        area: {
+                            fillOpacity: 0.25
+                        }
+                    },
+                    series: [{
+                        showInLegend: false,
+                        name: 'Videos',
+                        marker: { enabled: false },
+                        color: '#FFF',
+                        lineColor: '#FFF',
+                        lineWidth: 2,
+                        data: chartData6
+                    }]
+                });
+                let chart7 = new Highcharts.chart({
+                    chart: {
+                        renderTo: 'chart7',
+                        type: 'areaspline',
+                        zoomType: 'x',
+                        backgroundColor: 'transparent',
+                        plotBorderColor: 'transparent'
+                    },
+                    title: {
+                        text: ' '
+                    },
+                    credits: {
+                        enabled: false,
+                    }, xAxis: {
+                        type: 'datetime',
+                        visible: false
+                    },
+                    yAxis: {
+                        visible: false,
+                    },
+                    plotOptions: {
+                        series: {
+                            threshold: null,
+                            fillOpacity: 0.25
+                        },
+                        area: {
+                            fillOpacity: 0.25
+                        }
+                    },
+                    series: [{
+                        showInLegend: false,
+                        name: 'Commands',
+                        marker: { enabled: false },
+                        color: '#FFF',
+                        lineColor: '#FFF',
+                        lineWidth: 2,
+                        data: chartData7
+                    }]
+                });
+                let chart8 = new Highcharts.chart({
+                    chart: {
+                        renderTo: 'chart8',
+                        type: 'areaspline',
+                        zoomType: 'x',
+                        backgroundColor: 'transparent',
+                        plotBorderColor: 'transparent'
+                    },
+                    title: {
+                        text: ' '
+                    },
+                    credits: {
+                        enabled: false,
+                    }, xAxis: {
+                        type: 'datetime',
+                        visible: false
+                    },
+                    yAxis: {
+                        visible: false,
+                    },
+                    plotOptions: {
+                        series: {
+                            threshold: null,
+                            fillOpacity: 0.25
+                        },
+                        area: {
+                            fillOpacity: 0.25
+                        }
+                    },
+                    series: [{
+                        showInLegend: false,
+                        name: 'Streams',
+                        marker: { enabled: false },
+                        color: '#FFF',
+                        lineColor: '#FFF',
+                        lineWidth: 2,
+                        data: chartData8
+                    }]
+                });
+                let chart9 = new Highcharts.chart({
+                    chart: {
+                        renderTo: 'chart9',
+                        type: 'areaspline',
+                        zoomType: 'x',
+                        backgroundColor: 'transparent',
+                        plotBorderColor: 'transparent'
+                    },
+                    title: {
+                        text: ' '
+                    },
+                    credits: {
+                        enabled: false,
+                    }, xAxis: {
+                        type: 'datetime',
+                        visible: false
+                    },
+                    yAxis: {
+                        visible: false,
+                    },
+                    plotOptions: {
+                        series: {
+                            threshold: null,
+                            fillOpacity: 0.25
+                        },
+                        area: {
+                            fillOpacity: 0.25
+                        }
+                    },
+                    series: [{
+                        showInLegend: false,
+                        name: 'Shorts',
+                        marker: { enabled: false },
+                        color: '#FFF',
+                        lineColor: '#FFF',
+                        lineWidth: 2,
+                        data: chartData9
+                    }]
+                });
+                let chart10 = new Highcharts.chart({
+                    chart: {
+                        renderTo: 'chart10',
+                        type: 'areaspline',
+                        zoomType: 'x',
+                        backgroundColor: 'transparent',
+                        plotBorderColor: 'transparent'
+                    },
+                    title: {
+                        text: ' '
+                    },
+                    credits: {
+                        enabled: false,
+                    }, xAxis: {
+                        type: 'datetime',
+                        visible: false
+                    },
+                    yAxis: {
+                        visible: false,
+                    },
+                    plotOptions: {
+                        series: {
+                            threshold: null,
+                            fillOpacity: 0.25
+                        },
+                        area: {
+                            fillOpacity: 0.25
+                        }
+                    },
+                    series: [{
+                        showInLegend: false,
+                        name: 'Songs',
+                        marker: { enabled: false },
+                        color: '#FFF',
+                        lineColor: '#FFF',
+                        lineWidth: 2,
+                        data: chartData10
+                    }]
+                });
+                let chart11 = new Highcharts.chart({
+                    chart: {
+                        renderTo: 'chart11',
+                        type: 'areaspline',
+                        zoomType: 'x',
+                        backgroundColor: 'transparent',
+                        plotBorderColor: 'transparent'
+                    },
+                    title: {
+                        text: ' '
+                    },
+                    credits: {
+                        enabled: false,
+                    }, xAxis: {
+                        type: 'datetime',
+                        visible: false
+                    },
+                    yAxis: {
+                        visible: false,
+                    },
+                    plotOptions: {
+                        series: {
+                            threshold: null,
+                            fillOpacity: 0.25
+                        },
+                        area: {
+                            fillOpacity: 0.25
+                        }
+                    },
+                    series: [{
+                        showInLegend: false,
+                        name: 'Comments',
+                        marker: { enabled: false },
+                        color: '#FFF',
+                        lineColor: '#FFF',
+                        lineWidth: 2,
+                        data: chartData11
+                    }]
+                });
+                let chart12 = new Highcharts.chart({
+                    chart: {
+                        renderTo: 'chart12',
+                        type: 'areaspline',
+                        zoomType: 'x',
+                        backgroundColor: 'transparent',
+                        plotBorderColor: 'transparent'
+                    },
+                    title: {
+                        text: ' '
+                    },
+                    credits: {
+                        enabled: false,
+                    }, xAxis: {
+                        type: 'datetime',
+                        visible: false
+                    },
+                    yAxis: {
+                        visible: false,
+                    },
+                    plotOptions: {
+                        series: {
+                            threshold: null,
+                            fillOpacity: 0.25
+                        },
+                        area: {
+                            fillOpacity: 0.25
+                        }
+                    },
+                    series: [{
+                        showInLegend: false,
+                        name: 'Playlists',
+                        marker: { enabled: false },
+                        color: '#FFF',
+                        lineColor: '#FFF',
+                        lineWidth: 2,
+                        data: chartData12
+                    }]
+                });
+                let chart13 = new Highcharts.chart({
+                    chart: {
+                        renderTo: 'chart13',
+                        type: 'areaspline',
+                        zoomType: 'x',
+                        backgroundColor: 'transparent',
+                        plotBorderColor: 'transparent'
+                    },
+                    title: {
+                        text: ' '
+                    },
+                    credits: {
+                        enabled: false,
+                    }, xAxis: {
+                        type: 'datetime',
+                        visible: false
+                    },
+                    yAxis: {
+                        visible: false,
+                    },
+                    plotOptions: {
+                        series: {
+                            threshold: null,
+                            fillOpacity: 0.25
+                        },
+                        area: {
+                            fillOpacity: 0.25
+                        }
+                    },
+                    series: [{
+                        showInLegend: false,
+                        name: 'Posts',
+                        marker: { enabled: false },
+                        color: '#FFF',
+                        lineColor: '#FFF',
+                        lineWidth: 2,
+                        data: chartData13
+                    }]
+                });
+                let chart14 = new Highcharts.chart({
+                    chart: {
+                        renderTo: 'chart14',
+                        type: 'areaspline',
+                        zoomType: 'x',
+                        backgroundColor: 'transparent',
+                        plotBorderColor: 'transparent'
+                    },
+                    title: {
+                        text: ' '
+                    },
+                    credits: {
+                        enabled: false,
+                    }, xAxis: {
+                        type: 'datetime',
+                        visible: false
+                    },
+                    yAxis: {
+                        visible: false,
+                    },
+                    plotOptions: {
+                        series: {
+                            threshold: null,
+                            fillOpacity: 0.25
+                        },
+                        area: {
+                            fillOpacity: 0.25
+                        }
+                    },
+                    series: [{
+                        showInLegend: false,
+                        name: 'Stories',
+                        marker: { enabled: false },
+                        color: '#FFF',
+                        lineColor: '#FFF',
+                        lineWidth: 2,
+                        data: chartData14
+                    }]
+                });
+                let chart15 = new Highcharts.chart({
+                    chart: {
+                        renderTo: 'chart15',
+                        type: 'areaspline',
+                        zoomType: 'x',
+                        backgroundColor: 'transparent',
+                        plotBorderColor: 'transparent'
+                    },
+                    title: {
+                        text: ' '
+                    },
+                    credits: {
+                        enabled: false,
+                    }, xAxis: {
+                        type: 'datetime',
+                        visible: false
+                    },
+                    yAxis: {
+                        visible: false,
+                    },
+                    plotOptions: {
+                        series: {
+                            threshold: null,
+                            fillOpacity: 0.25
+                        },
+                        area: {
+                            fillOpacity: 0.25
+                        }
+                    },
+                    series: [{
+                        showInLegend: false,
+                        name: 'Podcasts',
+                        marker: { enabled: false },
+                        color: '#FFF',
+                        lineColor: '#FFF',
+                        lineWidth: 2,
+                        data: chartData15
+                    }]
+                })
+            })
+    }
+    load()
+    function changeTab(thing) {
+        if (thing == 'stats') {
+            window.location.href = "/live?id=" + id;
+        }
+        document.getElementById('videosTab').style.display = "none"
+        document.getElementById('streamsTab').style.display = "none"
+        document.getElementById('shortsTab').style.display = "none"
+        document.getElementById('songsTab').style.display = "none"
+        document.getElementById('podcastsTab').style.display = "none"
+        document.getElementById('storiesTab').style.display = "none"
+        document.getElementById('commentsTab').style.display = "none"
+        document.getElementById('postsTab').style.display = "none"
+        document.getElementById('playlistsTab').style.display = "none"
+        document.getElementById('graphsTab').style.display = "none"
+        document.getElementById('statsTable').style.display = "none"
+        document.getElementById('button1').style.border = "none"
+        document.getElementById('button2').style.border = "none"
+        document.getElementById('button3').style.border = "none"
+        document.getElementById('button4').style.border = "none"
+        document.getElementById('button5').style.border = "none"
+        document.getElementById('button6').style.border = "none"
+        document.getElementById('button7').style.border = "none"
+        document.getElementById('button8').style.border = "none"
+        document.getElementById('button9').style.border = "none"
+        document.getElementById('button10').style.border = "none"
+        document.getElementById('button11').style.border = "none"
+        if (thing == "videos") {
+            document.getElementById('videosTab').style.display = "grid"
+            document.getElementById('button1').style.border = "solid 1px #FFF"
+        } else if (thing == "streams") {
+            document.getElementById('streamsTab').style.display = "grid"
+            document.getElementById('button2').style.border = "solid 1px #FFF"
+        } else if (thing == "shorts") {
+            document.getElementById('shortsTab').style.display = "grid"
+            document.getElementById('button3').style.border = "solid 1px #FFF"
+        } else if (thing == "podcasts") {
+            document.getElementById('podcastsTab').style.display = "grid"
+            document.getElementById('button4').style.border = "solid 1px #FFF"
+        } else if (thing == "stories") {
+            document.getElementById('storiesTab').style.display = "grid"
+            document.getElementById('button5').style.border = "solid 1px #FFF"
+        } else if (thing == "comments") {
+            document.getElementById('commentsTab').style.display = "grid"
+            document.getElementById('button6').style.border = "solid 1px #FFF"
+        } else if (thing == "posts") {
+            document.getElementById('postsTab').style.display = "grid"
+            document.getElementById('button7').style.border = "solid 1px #FFF"
+        } else if (thing == "playlists") {
+            document.getElementById('playlistsTab').style.display = "grid"
+            document.getElementById('button8').style.border = "solid 1px #FFF"
+        } else if (thing == "graphs") {
+            document.getElementById('graphsTab').style.display = "grid"
+            document.getElementById('button9').style.border = "solid 1px #FFF"
+        } else if (thing == "table") {
+            document.getElementById('statsTable').style.display = "grid"
+            document.getElementById('button11').style.border = "solid 1px #FFF"
+        } else {
+            document.getElementById('songsTab').style.display = "grid"
+            document.getElementById('button10').style.border = "solid 1px #FFF"
+        }
+    }
+
+    function loadMore(type) {
+        let min = ""
+        let max = ""
+        if (type == 'videos') {
+            videoLoaded[0] += 4
+            videoLoaded[1] += 4
+            min = videoLoaded[0]
+            max = videoLoaded[1]
+        } else if (type == 'streams') {
+            streamLoaded[0] += 4
+            streamLoaded[1] += 4
+            min = streamLoaded[0]
+            max = streamLoaded[1]
+        } else if (type == 'shorts') {
+            shortLoaded[0] += 4
+            shortLoaded[1] += 4
+            min = shortLoaded[0]
+            max = shortLoaded[1]
+        } else if (type == 'podcasts') {
+            podcastLoaded[0] += 4
+            podcastLoaded[1] += 4
+            min = podcastLoaded[0]
+            max = podcastLoaded[1]
+        } else if (type == 'stories') {
+            storyLoaded[0] += 4
+            storyLoaded[1] += 4
+            min = storyLoaded[0]
+            max = storyLoaded[1]
+        } else if (type == 'comments') {
+            commentLoaded[0] += 4
+            commentLoaded[1] += 4
+            min = commentLoaded[0]
+            max = commentLoaded[1]
+        } else if (type == 'posts') {
+            postLoaded[0] += 4
+            postLoaded[1] += 4
+            min = postLoaded[0]
+            max = postLoaded[1]
+        } else if (type == 'playlists') {
+            playlistLoaded[0] += 4
+            playlistLoaded[1] += 4
+            min = playlistLoaded[0]
+            max = playlistLoaded[1]
+        } else {
+            songLoaded[0] += 4
+            songLoaded[1] += 4
+            min = songLoaded[0]
+            max = songLoaded[1]
+        }
+        fetch('/loadMore/' + id + '/' + type + '/' + sorts[type] + '/' + min + '/' + max, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(res => res.json())
+            .then(data => {
+                data.forEach(thing => {
+                    let card = document.createElement('div')
+                    let card2 = ""
+                    let card3 = ""
+                    if ((type == 'videos') || (type == 'streams') || (type == 'shorts') || (type == 'podcasts') || (type == 'songs') || (type == 'stories')) {
+                        if (!type == "stories") {
+                            card2 = `
+                    <h4 style="font-size: 1.3vw;">Length: ${thing.duration}</h4>
+                    <h4 style="font-size: 1.3vw;">Watchtime: ${thing.algorithm.averageWatchTime}%</h4>
+                    <h4 style="font-size: 1.3vw;">Algorithm: ${thing.inAlgorithm}</h4>`
+                            card3 = `<h4 style="font-size: 1.3vw;">${Math.floor(thing.dislikes).toLocaleString()} dislikes</h4>`
+                        }
+                        card.innerHTML = `
+                    <div style="border: 0.5vw #FFF solid;">
+                    <h1 style="font-weight: 900; font-size: 3vw; ">${thing.title.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</h1>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); font-size: 1vw;">
+                    <h4 style="font-size: 1.3vw;">${Math.floor(thing.views).toLocaleString()} views</h4>
+                    <h4 style="font-size: 1.3vw;">${Math.floor(thing.likes).toLocaleString()} likes</h4>
+                    ${card3}
+                    <h4 style="font-size: 1.3vw;">${Math.floor(thing.comments).toLocaleString()} comments</h4>
+                    <h4 style="font-size: 1.3vw;">Uploaded: ~${timeSince(thing.posted)} ago</h4>
+                    ${card2}
+                    </div>
+                    </div>`
+                    } else if (type == 'comments') {
+                        card.innerHTML = `<div style="border: 0.5vw #FFF solid;">
+                    <h1 style="font-weight: 900; font-size: 3vw; ">${thing.title.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</h1>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); font-size: 1vw;">
+                    <h4 style="font-size: 1.3vw;">${thing.likes.toLocaleString()} likes</h4>
+                    <h4 style="font-size: 1.3vw;">${thing.replies.toLocaleString()} replies</h4>
+                    <h4 style="font-size: 1.3vw;">Posted: ~${timeSince(thing.posted)} ago</h4>
+                    </div>
+                    </div>`
+                    } else if (type == 'posts') {
+                        card.innerHTML = `
+                    <div style="border: 0.5vw #FFF solid;">
+                    <h1 style="font-weight: 900; font-size: 3vw; ">${name} ${thing.title.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</h1>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); font-size: 1vw;">
+                    <h4 style="font-size: 1.3vw;">${thing.likes.toLocaleString()} likes</h4>
+                    <h4 style="font-size: 1.3vw;">${thing.comments.toLocaleString()} comments</h4>
+                    <h4 style="font-size: 1.3vw;">Posted: ~${timeSince(thing.posted)} ago</h4>
+                    </div>
+                    </div>`
+                    } else if (type == 'playlists') {
+                        card.innerHTML = `
+                    <div style="border: 0.5vw #FFF solid;">
+                    <h1 style="font-weight: 900; font-size: 3vw; ">${thing.title.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</h1>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); font-size: 1vw;">
+                    <h4 style="font-size: 1.3vw;">${Math.floor(thing.views).toLocaleString()} views</h4>
+                    <h4 style="font-size: 1.3vw;">Videos: ${thing.length}</h4>
+                    <h4 style="font-size: 1.3vw;">Posted: ~${timeSince(thing.posted)} ago</h4>
+                    </div>
+                    </div>`
+                    }
+                    document.getElementById(type + 'Tab').appendChild(card)
+                })
+                document.getElementById(type + 'LoadMore').remove()
+                var b = document.createElement('button')
+                b.innerHTML = "Load More"
+                b.class = "loadMore"
+                b.id = type + "LoadMore"
+                b.onclick = function () {
+                    loadMore(type)
+                }
+                document.getElementById(type + 'Tab').appendChild(b)
+            })
+    }
+
+    function timeSince(date) {
+        var seconds = Math.floor((new Date() - date) / 1000);
+        var interval = seconds / 31536000;
+        if (interval > 1) {
+            return Math.floor(interval) + " years";
+        }
+        interval = seconds / 2592000;
+        if (interval > 1) {
+            return Math.floor(interval) + " months";
+        }
+        interval = seconds / 86400;
+        if (interval > 1) {
+            return Math.floor(interval) + " days";
+        }
+        interval = seconds / 3600;
+        if (interval > 1) {
+            return Math.floor(interval) + " hours";
+        }
+        interval = seconds / 60;
+        if (interval > 1) {
+            return Math.floor(interval) + " minutes";
+        }
+        return Math.floor(seconds) + " seconds";
+    }
+
+    if (localStorage.getItem('token')) {
+        fetch('/me', {
+            headers: {
+                'Authorization': localStorage.getItem('token')
+            }
+        }).then(response => response.json()).then(data => {
+            if (data.success) {
+                document.getElementById('edit').src = data.user.image
+            }
+        })
+    }
+    function search() {
+        window.location.href = "/search?term=" + document.getElementById('search').value
+    }
+</script>
+
+</html>
