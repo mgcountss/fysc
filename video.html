@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <link rel="stylesheet" href="https://fysc.mgcounts.com/bootstrap.css">
+    <link rel="stylesheet" href="/bootstrap.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <meta charset="utf-8">
     <meta property="twitter:title" content="SFMGTube">
@@ -12,6 +12,9 @@
     <meta property="twitter:url" content="https://fysc.mgcounts.com">
     <meta property="og:description" content="SFMGTube">
     <meta property="twitter:description" content="SFMGTube">
+    <meta property="og:image" content="https://fysc.mgcounts.com/site/video.png">
+    <meta property="twitter:image" content="https://fysc.mgcounts.com/site/video.png">
+    <meta name="theme-color" content="#141414">
     <title>
         SFMGTube
     </title>
@@ -134,10 +137,11 @@
         </ul>
         <div class="video-thing" style="width: 100%; height: 100%; display: flex; gap: 5vw 5vw; padding: 2vw;">
             <div class="video" style="width: 75vw;">
-                <video id="video" controls="" autoplay="" style="width: 100%; height: 40vw;">
+                <!--<video id="video" controls="" autoplay="" style="width: 100%; height: 40vw;">
                     <source src="" type="video/mp4">
-                </video>
-                <div style="display: flex;">
+                </video>-->
+                <img id="video" src="" style="width: 100%; height: 35vw; object-fit: cover;">
+                <div style="display: flex; margin-top: 5px;">
                     <div style="width: 40%; text-align: left;">
                         <h2 id="title"
                             style="text-align: left; font-weight: bolder; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical;">
@@ -145,7 +149,11 @@
                         </h2>
                         <h5 id="views"
                             style="text-align: left; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical;">
-                            0 Views
+                            0 Views · 0 Days Ago · 00:00 Duration
+                        </h5>
+                        <h5 id="metrics"
+                            style="text-align: left; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical;">
+                            0% Watchtime · 0% Engagement · Algorithm: no, · Rating: 0
                         </h5>
                     </div>
                     <div style="display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; margin-left: 0px;">
@@ -190,11 +198,8 @@
                 </div>
                 <br>
             </div>
-            <div class="autoplay" id="autoplay" style="width: 15vw;">
-
-            </div>
+            <div class="autoplay" id="autoplay" style="width: 15vw;"></div>
         </div>
-
     </center>
 </body>
 <script>
@@ -205,17 +210,19 @@
         vid = document.URL.split('.html?/')[1].split('!')[0]
     }
     let user = document.URL.split('!')[1]
-    fetch('https://fysc.mgcounts.com/video/' + vid + '!' + user)
+    fetch('/video/' + vid + '!' + user)
         .then(res => res.json())
         .then(data => {
             document.getElementById('title').textContent = data.title
             document.title = data.title + " - SFMGTube"
-            document.getElementById('views').textContent = Math.floor(data.views).toLocaleString() + ' Views'
+            document.getElementById('views').textContent = Math.floor(data.views).toLocaleString() + ' Views' + ' · ' + time(data.posted) + ' · ' + data.duration
+            document.getElementById('metrics').textContent = Math.floor(data.algorithm.averageWatchTime) + '% Watchtime · ' + Math.floor(data.algorithm.engagement) + '% Engagement · Algorithm: ' + data.inAlgorithm + ' · Rating: ' + data.algorithm.rating
             document.getElementById('likes').textContent = Math.floor(data.likes).toLocaleString()
             document.getElementById('dislikes').textContent = Math.floor(data.dislikes).toLocaleString()
             document.getElementById('comments').textContent = Math.floor(data.comments).toLocaleString()
+            document.getElementById('video').src = '/thumbnail/' + data.id
         })
-    fetch('https://fysc.mgcounts.com/user2/' + user)
+    fetch('/user2/' + user)
         .then(res => res.json())
         .then(user2 => {
             document.getElementById('use').href = '/user?id=' + user
@@ -223,13 +230,13 @@
             document.getElementById('ownerName').textContent = user2.name
             document.getElementById('subs').textContent = Math.floor(user2.subs).toLocaleString() + ' Subscribers'
         })
-    fetch('https://fysc.mgcounts.com/site/all?sort=posted')
+    fetch('/site/videos?sort=algorithm')
         .then(res => res.json())
         .then(data => {
             data.uploads.forEach(upload => {
                 let card = `<div>
                         <a href="/videos/${upload.id}!${upload.ownerID}">
-                            <img src="${upload.ownerImage}"
+                            <img src="/thumbnail/${upload.id}"
                                 style="object-fit: cover; width: 15vw; height: 8vw;">
                             <h4
                                 style="overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; color: #FFF; font-weight: bolder;">
@@ -258,6 +265,7 @@
                 document.getElementById('autoplay').innerHTML += card
             })
         })
+
     function time(previous) {
         let current = new Date();
         var msPerMinute = 60 * 1000;
@@ -288,6 +296,18 @@
 
     function search() {
         window.location.href = "/search?term=" + document.getElementById('search').value
+    }
+
+    if (localStorage.getItem('token')) {
+        fetch('/me', {
+            headers: {
+                'Authorization': localStorage.getItem('token')
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('edit').src = data.user.image;
+            })
     }
 </script>
 

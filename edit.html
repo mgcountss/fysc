@@ -1,96 +1,131 @@
-<script src="https://js.hcaptcha.com/1/api.js" async defer></script>
-<script>
-    let hcaptchaCode = ""
-    var onSuccess = function (response) {
-        var errorDivs = document.getElementsByClassName("hcaptcha-error");
-        if (errorDivs.length) {
-            errorDivs[0].className = "";
+<!DOCTYPE html>
+
+<head>
+    <title>FYSC - Edit</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="./bootstrap.css">
+
+    <style>
+        body {
+            background-color: #141414;
+            font-family: Arial, sans-serif;
+            color: #FFF;
+            font-size: 2em;
         }
-        var errorMsgs = document.getElementsByClassName("hcaptcha-error-message");
-        if (errorMsgs.length) {
-            errorMsgs[0].parentNode.removeChild(errorMsgs[0]);
+
+        input {
+            width: 75%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            background-color: #333;
+            color: #FFF;
+            font-size: 2em;
         }
-        hcaptchaCode = response
-    };
-</script>
-<link rel="stylesheet" href="./odometer.css">
-<script src="./odometer.js"></script>
-<script src="./highstock.js"></script>
-<link rel="stylesheet" href="./bootstrap.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<style>
-    #cooldowns {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        column-gap: 0.5vw;
-    }
 
-    body {
-        background-color: #141414;
-        color: #FFF;
-        font-family: Arial, Helvetica, sans-serif;
-        text-align: center;
-    }
+        button:not(.navButton) {
+            padding: 0.5em;
+            margin: 0.5em 0;
+            border: none;
+            background-color: #333;
+            color: #FFF;
+            cursor: pointer;
+            font-size: 2em;
+        }
 
-    ul {
-        list-style-type: none;
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
-        background-color: #202020;
-    }
+        h2 {
+            font-size: 1.5em;
+        }
 
-    li {
-        float: left;
-        cursor: pointer;
-    }
+        img {
+            width: 3em;
+        }
 
-    li a {
-        display: block;
-        color: white;
-        text-align: center;
-        padding: 1vw 1vw;
-        text-decoration: none;
-    }
-</style>
+        .bad {
+            font-size: 1.5em;
+        }
+
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #202020;
+            margin-bottom: 0;
+        }
+
+        li {
+            float: left;
+            cursor: pointer;
+        }
+
+        li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 1vw 1vw;
+            text-decoration: none;
+        }
+    </style>
+
+    <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
+    <script>
+        let hcaptchaCode = ""
+        var onSuccess = function (response) {
+            var errorDivs = document.getElementsByClassName("hcaptcha-error");
+            if (errorDivs.length) {
+                errorDivs[0].className = "";
+            }
+            var errorMsgs = document.getElementsByClassName("hcaptcha-error-message");
+            if (errorMsgs.length) {
+                errorMsgs[0].parentNode.removeChild(errorMsgs[0]);
+            }
+            hcaptchaCode = response
+        };
+    </script>
+</head>
 
 <body>
-    <ul>
-        <li><a href="/" style="font-size: 20px; font-weight: 600;">SFMGTube</a></li>
-        <li><input class="form-control mr-sm-2" id="search" placeholder="Search" style="margin-top: 10px;"></li>
-        <li style="margin-top: 10px; margin-left: 0px;"><button
-                style="color: #FFF; height: 37px; width: 100px; box-sizing: border-box; display: inline-block; border-radius: 0.25rem; border: solid #FFF 1px; background-color: #202020;"
-                onclick="search()" style="margin-top: 20px;">Search</button></li>
-        <li style="float: right;">
-            <div style="display: flex;">
-                <i onclick="window.location.href = 'https://www.youtube.com/@sfmg/live'" id="upload"
-                    class="fa fa-upload" aria-hidden="true" style="font-size: 30px; margin-top: 17px; width: 60px;"></i>
-                <a href="/edit"><img src="" class="edit" id="edit" style="height: 35px; width: 35px;"></a>
-            </div>
-        </li>
-    </ul>
     <center>
-        <h1 id="cc">Connect</h1>
+
+        <ul>
+            <li><a href="/" style="font-size: 1.5vw; font-weight: 600;">SFMGTube</a></li>
+            <li><input class="form-control mr-sm-2" id="search" placeholder="Search"
+                    style="margin-top: 0.7vw; height: 3vw; width: 100%;"></li>
+            <li style="margin-top: 0.7vw; margin-left: 0vw;"><button class="navButton"
+                    style="color: #FFF; height: 3vw; width: 7vw; box-sizing: border-box; display: inline-block; border-radius: 0.25rem; border: solid #FFF 0.1vw; background-color: #202020;"
+                    onclick="window.location.href = '/old'" style="margin-top: 2vw;">Search</button></li>
+            <li style="float: right;">
+                <div style="display: flex;">
+                    <i onclick="window.location.href = 'https://youtube.com/@sfmg/live'" id="upload"
+                        class="fa fa-upload" aria-hidden="true"
+                        style="font-size: 2.5vw; margin-top: 1vw; width: 3vw;"></i>
+                    <a href="/edit"><img src="/default.png" class="edit" id="edit"
+                            style="height: 2.5vw; width: 2.5vw; border-radius: 50%; margin-bottom: 0;"></a>
+                </div>
+            </li>
+        </ul>
+        <h1 id="cc">Connect your channel to FYSC</h1>
         <div id="e">
-            <input type="text" id="name" placeholder="Channel username" /><button onclick="search2()">Search</button>
-            <a href="/login">Or login if you already connected your channel</a>
+            <p>Remember to use the exact username of the channel you want to connect to (case sensitive)</p>
+            <input type="text" id="name" placeholder="Channel username" /><br><button
+                onclick="search()">Search</button><br>
+            <p>If you've already connected your channel, you can login</p>
+            <a href="/login">click here to *login*</a>
         </div>
-        <div id="results"></div>
     </center>
+    <style>
+        #cooldowns {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            column-gap: 0.5vw;
+        }
+    </style>
+
+    <center id="results"></center>
+
     <script>
-                if (localStorage.getItem('token')) {
-        fetch('/me', {
-            headers: {
-                'Authorization': localStorage.getItem('token')
-            }
-        }).then(response => response.json()).then(data => {
-            if (data.success) {
-                document.getElementById('frame').src = "/live?id="+data.user.cid
-                document.getElementById('edit').src = data.user.image
-            }
-        })
-    }
         let actionNormalCooldowns = {
             "community": 31,
             "comment": 31,
@@ -104,8 +139,7 @@
             "collab": 61,
             "drama": 61,
             "shoutout": 61,
-            "story": 31,
-            "podcast": 61,
+            "podcast": 61
         }
         function deleteAccount() {
             if (confirm('Are you sure you want to delete your account? (This will also delete your channel from the stream)')) {
@@ -133,7 +167,9 @@
             window.location.href = '/'
         }
         if (localStorage.getItem('token')) {
-           // setInterval(() => {
+            
+            let firstlol = true;
+            setInterval(() => {
                 fetch('/me', {
                     headers: {
                         'Authorization': localStorage.getItem('token')
@@ -142,109 +178,100 @@
                     .then(response => response.json())
                     .then(data => {
                         if (!data.user) {
-                            alert('User not found')
-                            localStorage.removeItem('token')
-                            window.location.href = '/'
+                            if (firstlol) {
+                                fetch('/me', {
+                                    headers: {
+                                        'Authorization': localStorage.getItem('token')
+                                    }
+                                })
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        if (!data.user) {
+                                            alert('User not found')
+                                            localStorage.removeItem('token')
+                                            window.location.href = '/'
+                                        }
+                                    })
+                            }
                         }
-                    //    let str = ""
-                    //    for (let i = 0; i < data.user.cooldown.length; i++) {
-                    //        let cooldown = actionNormalCooldowns[data.user.cooldown[i].time]
-                    //        if (cooldown) {
-                    //            let bruh = Math.floor(cooldown - ((new Date().getTime() - data.user.cooldown[i].time) / 1000))
-                    //            if (bruh >= 0) {
-                    //                str += `<p> !${data.user.cooldown[i].time} - ${bruh} seconds | </p>`
-                    //            }
-                    //        }
-                    //    }
-                    //    document.getElementById('cooldowns').innerHTML = str
-                    })
-         //   }, 1000)
-        }
-        if (localStorage.getItem('token')) {
-            function action(action) {
-                console.log(action)
-                if (document.getElementById('action').value.length > 100) return alert('Please enter a shorter title.')
-                if (document.getElementById('action').value.length < 1) return alert('Please enter a title.')
-                fetch('/action/' + action, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': localStorage.getItem('token'),
-                        'hcaptcha': hcaptchaCode
-                    },
-                    body: JSON.stringify({
-                        title: document.getElementById('action').value
-                    })
-                })
-                    .then(res => res.json())
-                    .then(data => {
-                        if (!data.cooldown) {
-                            if (data.error) {
-                                if (data.error == 'Captcha expired') {
-                                    alert('Captcha expired, please refresh the page and try again.')
-                                    location.reload()
-                                    return
-                                } else {
-                                    alert('Error: ' + data.error)
-                                    return
+                        firstlol = false;
+                        let str = ""
+                        let num = 0;
+                        let aaa = setInterval(() => {
+                            str = ""
+                            num++
+                            if (num == 5) {
+                                clearInterval(aaa)
+                            }
+                            for (let i = 0; i < data.user.cooldown.length; i++) {
+                                let cooldown = actionNormalCooldowns[data.user.cooldown[i]]
+                                if (cooldown) {
+                                    let l = Math.floor(cooldown - ((new Date().getTime() - data.user.cooldown2[i]) / 1000))
+                                    if (l > 0) {
+                                        str += `<p> !${data.user.cooldown[i]} - ${l} seconds | </p>`
+                                    }
                                 }
                             }
-                            alert('Successfully sent: !' + action)
-                            document.getElementById('hcaptcha-demo2').style.visibility = 'hidden'
-                        } else {
-                            alert('Error: Cooldown: ' + data.cooldown + ' seconds)')
-                        }
+                            document.getElementById('cooldowns').innerHTML = str;
+                            document.getElementById('c_page').href = '/user?id=' + data.user.cid
+                        }, 1000)
                     })
-            }
-            document.getElementById('e').innerHTML = ""
-            document.getElementById('cc').innerHTML = `Still working on this page lol...`
-            document.getElementById('results').innerHTML = `
-        <button onclick="logout()">Logout</button><br><br>
-        <button onclick="deleteAccount()">Delete Account</button><br><br>
-        <div id="cooldowns"></div>
-        <a href="/">Home Page</a><br><br>
-        <a href="https://youtube.com/@sfmg/live">Stream</a><br>
-        <hr>
-        <h1>Actions:</h1>
-        <button onclick="action('upload')" id="upload">!Upload</button>
-        <button onclick="action('short')" id="short">!Short</button>
-        <button onclick="action('stream')" id="stream">!Stream</button>
-        <button onclick="action('song')" id="song">!Song</button>
-        <button onclick="action('playlist')" id="playlist">!Playlist</button>
-        <button onclick="action('comment')" id="comment">!Comment</button>
-        <button onclick="action('community')" id="community">!Community</button>
-        <button onclick="action('story')" id="story">!Story</button>
-        <button onclick="action('podcast')" id="podcast">!Podcast</button><br>
-        <input type="text" id="action" placeholder="Video title/Short title/Comment text/etc" style="width: 50%;"/><br>
-        <h1>Make sure to fill out the captcha</h1>
-        <div id="hcaptcha-demo2"><div id="hcaptcha-demo" class="h-captcha" data-sitekey="bdeda7fb-2034-4e28-885d-37e6f779761d" data-callback="onSuccess"
-        data-expired-callback="onExpire"></div></div><br><br><br>
-        <iframe src="" id="frame" width="100%" height="500px"></iframe>
-        `
-        } else {
-            function search2() {
+            }, 10000)
+
+            function action(action) {
+            console.log(action)
+            if (document.getElementById('action').value.length > 100) return alert('Please enter a shorter title.')
+            if (document.getElementById('action').value.length < 1) return alert('Please enter a title.')
+            fetch('/action/' + action + '/' + document.getElementById('action').value, {
+                headers: {
+                    'Authorization': localStorage.getItem('token'),
+                    'hcaptcha': hcaptchaCode
+                }
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (!data.cooldown) {
+                        if (data.error) {
+                            if (data.error == 'Captcha expired') {
+                                alert('Captcha expired, please refresh the page and try again.')
+                                location.reload()
+                                return
+                            } else {
+                                alert('Error: ' + data.error)
+                                return
+                            }
+                        }
+                        alert('Successfully sent: !' + action)
+                        document.getElementById('hcaptcha-demo2').style.visibility = 'hidden'
+                    } else {
+                        alert('Error: Cooldown: ' + data.cooldown + ' seconds)')
+                    }
+                })
+        }
+            let id = ""
+            let code = ""
+            function search() {
                 fetch('/search', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': localStorage.getItem('token')
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        search: document.getElementById('name').value
+                        name: document.getElementById('name').value
                     })
                 })
                     .then(res => res.json())
                     .then(data => {
-                        document.getElementById('results').innerHTML = ""
-                        if (data.length > 0) {
-                            for (let i = 0; i < data.length; i++) {
-                                document.getElementById('results').innerHTML += `
-                        <h2>${data[i].name}</h2>
-                        <img src="${data[i].image}" />
-                        <p>${Math.floor(data[i].subs).toLocaleString()}</p>
-                        <button onclick="gen('${data[i].cid}')">Next</button><br>
+                        if (!data.error) {
+                            id = data.cid
+                            document.getElementById('results').innerHTML = `<hr>
+                        <h2>${data.name}</h2>
+                        <img src="${data.image}" />
+                        <p>${Math.floor(data.subs).toLocaleString()} subscribers</p>
+                        <p>${data.cid}</p><hr>
+                        <button onclick="gen()" class="bad" id="bada">Next</button><br>
+                        <button class="bad" onclick="window.location.href = '/edit'">Not your channel? Try again.</button>
                     `
-                            }
                         } else {
                             document.getElementById('results').innerHTML = `
                         <p>Error: ${data.error}</p>
@@ -253,11 +280,15 @@
                     })
             }
 
-            function gen(id) {
-                document.getElementById('results').innerHTML += `<br><br>
-        <label>Enter a new password (don't forget it)</label><br>
+            function gen() {
+                if (!document.getElementById('password')) {
+                    document.getElementById('results').innerHTML += `<br><br>
+        <label>Enter a new password (don't forget it, there is no way to recover it):</label><br>
+        <label>DO NOT USE THE SAME PASSWORD AS YOUR YOUTUBE ACCOUNT</label><br>
         <input type="password" id="password" />
-        <button onclick="connect('${id}')">Connect</button>`
+        <button onclick="connect()">Connect</button>`
+                    document.getElementById('bada').innerHTML = "Next (scroll down)"
+                }
             }
 
             function lol() {
@@ -268,7 +299,7 @@
                 return str
             }
 
-            function connect(id) {
+            function connect() {
                 if (document.getElementById('password').value == "") return alert("Please enter a password.")
                 fetch('/connect/' + id, {
                     method: 'POST',
@@ -283,9 +314,13 @@
                     .then(data => {
                         if (!data.error) {
                             if (data.verified == false) {
+                                code = data.code
                                 document.getElementById('results').innerHTML = ""
                                 document.getElementById('e').innerHTML = ""
-                                document.getElementById('results').innerHTML += `<h1>Please send the following command in the chat!</p><br><a href="https://www.youtube.com/@sfmg/live">Stream</a><br><input value="!connect ${data.code}" style="width: 90%;"><lable>or</label><input value="!c ${data.code}" style="width: 90%;"><br<<p id="m">Not verified yet...</p>`
+                                document.getElementById('results').innerHTML += `
+                            <h1>Please send the following command in the stream chat!</p><br><a href="https://www.youtube.com/@sfmg/live">Stream</a><br>
+                                <input value="!connect ${data.code}" style="width: 90%;"><lable>or</label><input value="!c ${data.code}" style="width: 90%;"><br>
+                            <p id="m">Not verified yet...</p>`
                                 setInterval(() => {
                                     fetch('/check/' + id + '?lol=' + lol())
                                         .then(res => res.json())
@@ -300,9 +335,6 @@
                                             }
                                         })
                                 }, 5000)
-                            } else {
-                                alert('You have already verified this account!')
-                                window.location.href = '/login'
                             }
                         } else {
                             document.getElementById('results').innerHTML += `<p>Error: ${data.error}</p>`
@@ -310,9 +342,7 @@
                     })
             }
         }
-
-        function search() {
-            window.location.href = "/search?term=" + document.getElementById('search').value
-        }
     </script>
 </body>
+
+</html>
